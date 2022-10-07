@@ -98,6 +98,13 @@
         <mat-header-row *matHeaderRowDef="membersDisplayedColumns; sticky: true"></mat-header-row>
         <mat-row *matRowDef="let row; columns: membersDisplayedColumns"></mat-row>
       </mat-table>
+      <button
+        type="button"
+        class="ft-12-700 add-member"
+        (click)="addMember()"
+      >
+        + {{ 'segments.members-add-members.text' | translate }}
+      </button>
       <span
         class="ft-14-600 validation-message"
         *ngIf="membersCountError"
@@ -108,13 +115,6 @@
         *ngIf="memberImportWarning"
         [innerHTML]="memberImportWarning"
       ></span>
-      <button
-        type="button"
-        class="ft-12-700 add-member"
-        (click)="addMember()"
-      >
-        + {{ 'segments.members-add-members.text' | translate }}
-      </button>
     </form>
   </section>
   <section class="shared-modal--buttons-container">
