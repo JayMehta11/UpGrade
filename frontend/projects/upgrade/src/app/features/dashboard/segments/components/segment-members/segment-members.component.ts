@@ -121,6 +121,22 @@ export class SegmentMembersComponent implements OnInit, OnChanges {
     });
   }
 
+  displayHeader() {
+    if (this.members.length === 0) {
+      return 'none'
+    } else {
+      return 'unset'
+    }
+  }
+
+  displayHeaderBorder() {
+    if (this.members.length === 0) {
+      return '0px'
+    } else {
+      return '1px'
+    }
+  }
+
   addMembers(type = null, id = null) {
     return this._formBuilder.group({
       type: [type , Validators.required],

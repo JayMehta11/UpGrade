@@ -25,7 +25,7 @@
         </div>
       </div>
     
-      <mat-table *ngIf="members.length>0"
+      <mat-table 
         class="members-table"
         [dataSource]="membersDataSource"
         formArrayName="members"
@@ -33,7 +33,7 @@
       >
         <!-- Members Type Column -->
         <ng-container matColumnDef="type">
-          <mat-header-cell class="ft-14-700" *matHeaderCellDef>
+          <mat-header-cell class="ft-14-700" *matHeaderCellDef [style.display]="displayHeader()">
             {{ 'segments.global-members-type.text' | translate }}
           </mat-header-cell>
           <mat-cell 
@@ -52,7 +52,7 @@
     
         <!-- Members Id Column -->
         <ng-container matColumnDef="id">
-          <mat-header-cell class="ft-14-700" *matHeaderCellDef>
+          <mat-header-cell class="ft-14-700" *matHeaderCellDef [style.display]="displayHeader()">
             {{ 'segments.global-members-id/name.text' | translate }}
           </mat-header-cell>
           <mat-cell
@@ -95,7 +95,7 @@
           </mat-cell>
         </ng-container>
     
-        <mat-header-row *matHeaderRowDef="membersDisplayedColumns; sticky: true"></mat-header-row>
+        <mat-header-row *matHeaderRowDef="membersDisplayedColumns; sticky: true" [style.border-bottom-width]="displayHeaderBorder()"></mat-header-row>
         <mat-row *matRowDef="let row; columns: membersDisplayedColumns"></mat-row>
       </mat-table>
       <button
