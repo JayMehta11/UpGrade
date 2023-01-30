@@ -8,34 +8,36 @@ import { createGlobalExcludeSegment } from '../../../src/init/seed/globalExclude
 @EntityRepository(Experiment)
 export class ExperimentRepository extends Repository<Experiment> {
   public async findAllExperiments(): Promise<Experiment[]> {
-    return this.createQueryBuilder('experiment')
-      .leftJoinAndSelect('experiment.conditions', 'conditions')
-      .leftJoinAndSelect('experiment.partitions', 'partitions')
-      .leftJoinAndSelect('experiment.queries', 'queries')
-      .leftJoinAndSelect('experiment.stateTimeLogs', 'stateTimeLogs')
-      .leftJoinAndSelect('experiment.experimentSegmentInclusion', 'experimentSegmentInclusion')
-      .leftJoinAndSelect('experimentSegmentInclusion.segment', 'segmentInclusion')
-      .leftJoinAndSelect('segmentInclusion.individualForSegment', 'individualForSegment')
-      .leftJoinAndSelect('segmentInclusion.groupForSegment', 'groupForSegment')
-      .leftJoinAndSelect('segmentInclusion.subSegments', 'subSegment')
-      .leftJoinAndSelect('experiment.experimentSegmentExclusion', 'experimentSegmentExclusion')
-      .leftJoinAndSelect('experimentSegmentExclusion.segment', 'segmentExclusion')
-      .leftJoinAndSelect('segmentExclusion.individualForSegment', 'individualForSegmentExclusion')
-      .leftJoinAndSelect('segmentExclusion.groupForSegment', 'groupForSegmentExclusion')
-      .leftJoinAndSelect('segmentExclusion.subSegments', 'subSegmentExclusion')
-      .leftJoinAndSelect('queries.metric', 'metric')
-      .leftJoinAndSelect('partitions.conditionAliases', 'conditionAliases')
-      .leftJoinAndSelect('conditionAliases.parentCondition', 'parentCondition')
-      .leftJoinAndSelect('partitions.factors', 'factors')
-      .leftJoinAndSelect('factors.levels', 'levels')
-      .leftJoinAndSelect('conditions.levelCombinationElements', 'levelCombinationElements')
-      .leftJoinAndSelect('levelCombinationElements.level', 'level')
-      .leftJoinAndSelect('conditions.conditionAliases', 'conditionAlias')
-      .getMany()
-      .catch((errorMsg: any) => {
-        const errorMsgString = repositoryError('ExperimentRepository', 'find', {}, errorMsg);
-        throw errorMsgString;
-      });
+    return (
+      this.createQueryBuilder('experiment')
+        .leftJoinAndSelect('experiment.conditions', 'conditions')
+        .leftJoinAndSelect('experiment.partitions', 'partitions')
+        .leftJoinAndSelect('experiment.queries', 'queries')
+        .leftJoinAndSelect('experiment.stateTimeLogs', 'stateTimeLogs')
+        .leftJoinAndSelect('experiment.experimentSegmentInclusion', 'experimentSegmentInclusion')
+        .leftJoinAndSelect('experimentSegmentInclusion.segment', 'segmentInclusion')
+        .leftJoinAndSelect('segmentInclusion.individualForSegment', 'individualForSegment')
+        .leftJoinAndSelect('segmentInclusion.groupForSegment', 'groupForSegment')
+        .leftJoinAndSelect('segmentInclusion.subSegments', 'subSegment')
+        .leftJoinAndSelect('experiment.experimentSegmentExclusion', 'experimentSegmentExclusion')
+        .leftJoinAndSelect('experimentSegmentExclusion.segment', 'segmentExclusion')
+        .leftJoinAndSelect('segmentExclusion.individualForSegment', 'individualForSegmentExclusion')
+        .leftJoinAndSelect('segmentExclusion.groupForSegment', 'groupForSegmentExclusion')
+        .leftJoinAndSelect('segmentExclusion.subSegments', 'subSegmentExclusion')
+        .leftJoinAndSelect('queries.metric', 'metric')
+        .leftJoinAndSelect('partitions.conditionAliases', 'conditionAliases')
+        .leftJoinAndSelect('conditionAliases.parentCondition', 'parentCondition')
+        // .leftJoinAndSelect('partitions.factors', 'factors')
+        // .leftJoinAndSelect('factors.levels', 'levels')
+        // .leftJoinAndSelect('conditions.levelCombinationElements', 'levelCombinationElements')
+        // .leftJoinAndSelect('levelCombinationElements.level', 'level')
+        // .leftJoinAndSelect('conditions.conditionAliases', 'conditionAlias')
+        .getMany()
+        .catch((errorMsg: any) => {
+          const errorMsgString = repositoryError('ExperimentRepository', 'find', {}, errorMsg);
+          throw errorMsgString;
+        })
+    );
   }
 
   public async findAllName(): Promise<Array<Pick<Experiment, 'id' | 'name'>>> {
@@ -49,84 +51,93 @@ export class ExperimentRepository extends Repository<Experiment> {
   }
 
   public async getValidExperiments(context: string): Promise<Experiment[]> {
-    return this.createQueryBuilder('experiment')
-      .leftJoinAndSelect('experiment.partitions', 'partitions')
-      .leftJoinAndSelect('experiment.conditions', 'conditions')
-      .leftJoinAndSelect('experiment.experimentSegmentInclusion', 'experimentSegmentInclusion')
-      .leftJoinAndSelect('experimentSegmentInclusion.segment', 'segmentInclusion')
-      .leftJoinAndSelect('segmentInclusion.individualForSegment', 'individualForSegment')
-      .leftJoinAndSelect('segmentInclusion.groupForSegment', 'groupForSegment')
-      .leftJoinAndSelect('segmentInclusion.subSegments', 'subSegment')
-      .leftJoinAndSelect('experiment.experimentSegmentExclusion', 'experimentSegmentExclusion')
-      .leftJoinAndSelect('experimentSegmentExclusion.segment', 'segmentExclusion')
-      .leftJoinAndSelect('segmentExclusion.individualForSegment', 'individualForSegmentExclusion')
-      .leftJoinAndSelect('segmentExclusion.groupForSegment', 'groupForSegmentExclusion')
-      .leftJoinAndSelect('segmentExclusion.subSegments', 'subSegmentExclusion')
-      .leftJoinAndSelect('partitions.conditionAliases', 'conditionAliases')
-      .leftJoinAndSelect('conditionAliases.parentCondition', 'parentCondition')
-      .leftJoinAndSelect('partitions.factors', 'factors')
-      .leftJoinAndSelect('factors.levels', 'levels')
-      .leftJoinAndSelect('conditions.levelCombinationElements', 'levelCombinationElements')
-      .leftJoinAndSelect('levelCombinationElements.level', 'level')
-      .leftJoinAndSelect('conditions.conditionAliases', 'conditionAlias')
-      .where(
-        new Brackets((qb) => {
-          qb.where(
-            '(experiment.state = :enrolling OR experiment.state = :enrollmentComplete) AND :context ILIKE ANY (ARRAY[experiment.context])',
-            {
-              enrolling: 'enrolling',
-              enrollmentComplete: 'enrollmentComplete',
-              context,
-            }
-          );
+    return (
+      this.createQueryBuilder('experiment')
+        .leftJoinAndSelect('experiment.partitions', 'partitions')
+        .leftJoinAndSelect('experiment.conditions', 'conditions')
+        .leftJoinAndSelect('experiment.experimentSegmentInclusion', 'experimentSegmentInclusion')
+        .leftJoinAndSelect('experimentSegmentInclusion.segment', 'segmentInclusion')
+        .leftJoinAndSelect('segmentInclusion.individualForSegment', 'individualForSegment')
+        .leftJoinAndSelect('segmentInclusion.groupForSegment', 'groupForSegment')
+        .leftJoinAndSelect('segmentInclusion.subSegments', 'subSegment')
+        .leftJoinAndSelect('experiment.experimentSegmentExclusion', 'experimentSegmentExclusion')
+        .leftJoinAndSelect('experimentSegmentExclusion.segment', 'segmentExclusion')
+        .leftJoinAndSelect('segmentExclusion.individualForSegment', 'individualForSegmentExclusion')
+        .leftJoinAndSelect('segmentExclusion.groupForSegment', 'groupForSegmentExclusion')
+        .leftJoinAndSelect('segmentExclusion.subSegments', 'subSegmentExclusion')
+        .leftJoinAndSelect('partitions.conditionAliases', 'conditionAliases')
+        .leftJoinAndSelect('conditionAliases.parentCondition', 'parentCondition')
+        // .leftJoinAndSelect('partitions.factors', 'factors')
+        // .leftJoinAndSelect('factors.levels', 'levels')
+        // .leftJoinAndSelect('conditions.levelCombinationElements', 'levelCombinationElements')
+        // .leftJoinAndSelect('levelCombinationElements.level', 'level')
+        // .leftJoinAndSelect('conditions.conditionAliases', 'conditionAlias')
+        .where(
+          new Brackets((qb) => {
+            qb.where(
+              '(experiment.state = :enrolling OR experiment.state = :enrollmentComplete) AND :context ILIKE ANY (ARRAY[experiment.context])',
+              {
+                enrolling: 'enrolling',
+                enrollmentComplete: 'enrollmentComplete',
+                context,
+              }
+            );
+          })
+        )
+        .getMany()
+        .catch((errorMsg: any) => {
+          const errorMsgString = repositoryError('ExperimentRepository', 'getValidExperiments', {}, errorMsg);
+          throw errorMsgString;
         })
-      )
-      .getMany()
-      .catch((errorMsg: any) => {
-        const errorMsgString = repositoryError('ExperimentRepository', 'getValidExperiments', {}, errorMsg);
-        throw errorMsgString;
-      });
+    );
   }
 
   public async getValidExperimentsWithPreview(context: string): Promise<Experiment[]> {
-    return this.createQueryBuilder('experiment')
-      .leftJoinAndSelect('experiment.partitions', 'partitions')
-      .leftJoinAndSelect('experiment.conditions', 'conditions')
-      .leftJoinAndSelect('experiment.experimentSegmentInclusion', 'experimentSegmentInclusion')
-      .leftJoinAndSelect('experimentSegmentInclusion.segment', 'segmentInclusion')
-      .leftJoinAndSelect('segmentInclusion.individualForSegment', 'individualForSegment')
-      .leftJoinAndSelect('segmentInclusion.groupForSegment', 'groupForSegment')
-      .leftJoinAndSelect('segmentInclusion.subSegments', 'subSegment')
-      .leftJoinAndSelect('experiment.experimentSegmentExclusion', 'experimentSegmentExclusion')
-      .leftJoinAndSelect('experimentSegmentExclusion.segment', 'segmentExclusion')
-      .leftJoinAndSelect('segmentExclusion.individualForSegment', 'individualForSegmentExclusion')
-      .leftJoinAndSelect('segmentExclusion.groupForSegment', 'groupForSegmentExclusion')
-      .leftJoinAndSelect('segmentExclusion.subSegments', 'subSegmentExclusion')
-      .leftJoinAndSelect('partitions.conditionAliases', 'conditionAliases')
-      .leftJoinAndSelect('conditionAliases.parentCondition', 'parentCondition')
-      .leftJoinAndSelect('partitions.factors', 'factors')
-      .leftJoinAndSelect('factors.levels', 'levels')
-      .leftJoinAndSelect('conditions.levelCombinationElements', 'levelCombinationElements')
-      .leftJoinAndSelect('levelCombinationElements.level', 'level')
-      .leftJoinAndSelect('conditions.conditionAliases', 'conditionAlias')
-      .where(
-        new Brackets((qb) => {
-          qb.where(
-            '(experiment.state = :enrolling OR experiment.state = :enrollmentComplete OR experiment.state = :preview) AND :context ILIKE ANY (ARRAY[experiment.context])',
-            {
-              enrolling: 'enrolling',
-              enrollmentComplete: 'enrollmentComplete',
-              preview: 'preview',
-              context,
-            }
+    return (
+      this.createQueryBuilder('experiment')
+        .leftJoinAndSelect('experiment.partitions', 'partitions')
+        .leftJoinAndSelect('experiment.conditions', 'conditions')
+        .leftJoinAndSelect('experiment.experimentSegmentInclusion', 'experimentSegmentInclusion')
+        .leftJoinAndSelect('experimentSegmentInclusion.segment', 'segmentInclusion')
+        .leftJoinAndSelect('segmentInclusion.individualForSegment', 'individualForSegment')
+        .leftJoinAndSelect('segmentInclusion.groupForSegment', 'groupForSegment')
+        .leftJoinAndSelect('segmentInclusion.subSegments', 'subSegment')
+        .leftJoinAndSelect('experiment.experimentSegmentExclusion', 'experimentSegmentExclusion')
+        .leftJoinAndSelect('experimentSegmentExclusion.segment', 'segmentExclusion')
+        .leftJoinAndSelect('segmentExclusion.individualForSegment', 'individualForSegmentExclusion')
+        .leftJoinAndSelect('segmentExclusion.groupForSegment', 'groupForSegmentExclusion')
+        .leftJoinAndSelect('segmentExclusion.subSegments', 'subSegmentExclusion')
+        .leftJoinAndSelect('partitions.conditionAliases', 'conditionAliases')
+        .leftJoinAndSelect('conditionAliases.parentCondition', 'parentCondition')
+        // .leftJoinAndSelect('partitions.factors', 'factors')
+        // .leftJoinAndSelect('factors.levels', 'levels')
+        // .leftJoinAndSelect('conditions.levelCombinationElements', 'levelCombinationElements')
+        // .leftJoinAndSelect('levelCombinationElements.level', 'level')
+        // .leftJoinAndSelect('conditions.conditionAliases', 'conditionAlias')
+        .where(
+          new Brackets((qb) => {
+            qb.where(
+              '(experiment.state = :enrolling OR experiment.state = :enrollmentComplete OR experiment.state = :preview) AND :context ILIKE ANY (ARRAY[experiment.context])',
+              {
+                enrolling: 'enrolling',
+                enrollmentComplete: 'enrollmentComplete',
+                preview: 'preview',
+                context,
+              }
+            );
+          })
+        )
+        .getMany()
+        .catch((errorMsg: any) => {
+          const errorMsgString = repositoryError(
+            'ExperimentRepository',
+            'getValidExperimentsWithPreview',
+            {},
+            errorMsg
           );
+          throw errorMsgString;
         })
-      )
-      .getMany()
-      .catch((errorMsg: any) => {
-        const errorMsgString = repositoryError('ExperimentRepository', 'getValidExperimentsWithPreview', {}, errorMsg);
-        throw errorMsgString;
-      });
+    );
   }
 
   public async updateState(
