@@ -6,7 +6,7 @@ module.exports = {
     default: 'nps',
     help: 'npm start help',
     test: {
-      default: 'nps test.coverage',
+      default: 'npm start test.integration.run',
       integration: {
         default: {
           script: series('nps banner.testIntegration', 'nps test.integration.pretest', 'nps test.integration.run'),
