@@ -29,7 +29,7 @@ export class ExperimentRepository extends Repository<Experiment> {
         .leftJoinAndSelect('conditionAliases.parentCondition', 'parentCondition')
         // .leftJoinAndSelect('partitions.factors', 'factors')
         // .leftJoinAndSelect('factors.levels', 'levels')
-        .leftJoinAndSelect('conditions.levelCombinationElements', 'levelCombinationElements')
+        // .leftJoinAndSelect('conditions.levelCombinationElements', 'levelCombinationElements')
         .leftJoinAndSelect('conditions.conditionAliases', 'conditionAlias')
         // .leftJoinAndSelect('levelCombinationElements.level', 'level')
         .getMany()
@@ -69,7 +69,7 @@ export class ExperimentRepository extends Repository<Experiment> {
         .leftJoinAndSelect('conditionAliases.parentCondition', 'parentCondition')
         // .leftJoinAndSelect('partitions.factors', 'factors')
         // .leftJoinAndSelect('factors.levels', 'levels')
-        .leftJoinAndSelect('conditions.levelCombinationElements', 'levelCombinationElements')
+        // .leftJoinAndSelect('conditions.levelCombinationElements', 'levelCombinationElements')
         .leftJoinAndSelect('conditions.conditionAliases', 'conditionAlias')
         // .leftJoinAndSelect('levelCombinationElements.level', 'level')
         .where(
@@ -111,7 +111,7 @@ export class ExperimentRepository extends Repository<Experiment> {
         .leftJoinAndSelect('conditionAliases.parentCondition', 'parentCondition')
         // .leftJoinAndSelect('partitions.factors', 'factors')
         // .leftJoinAndSelect('factors.levels', 'levels')
-        .leftJoinAndSelect('conditions.levelCombinationElements', 'levelCombinationElements')
+        // .leftJoinAndSelect('conditions.levelCombinationElements', 'levelCombinationElements')
         .leftJoinAndSelect('conditions.conditionAliases', 'conditionAlias')
         // .leftJoinAndSelect('levelCombinationElements.level', 'level')
         .where(
