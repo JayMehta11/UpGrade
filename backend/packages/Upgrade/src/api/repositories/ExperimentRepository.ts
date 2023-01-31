@@ -30,7 +30,7 @@ export class ExperimentRepository extends Repository<Experiment> {
         // .leftJoinAndSelect('partitions.factors', 'factors')
         // .leftJoinAndSelect('factors.levels', 'levels')
         // .leftJoinAndSelect('conditions.levelCombinationElements', 'levelCombinationElements')
-        .leftJoinAndSelect('conditions.conditionAliases', 'conditionAlias')
+        // .leftJoinAndSelect('conditions.conditionAliases', 'conditionAlias')
         // .leftJoinAndSelect('levelCombinationElements.level', 'level')
         .getMany()
         .catch((errorMsg: any) => {
@@ -70,7 +70,7 @@ export class ExperimentRepository extends Repository<Experiment> {
         // .leftJoinAndSelect('partitions.factors', 'factors')
         // .leftJoinAndSelect('factors.levels', 'levels')
         // .leftJoinAndSelect('conditions.levelCombinationElements', 'levelCombinationElements')
-        .leftJoinAndSelect('conditions.conditionAliases', 'conditionAlias')
+        // .leftJoinAndSelect('conditions.conditionAliases', 'conditionAlias')
         // .leftJoinAndSelect('levelCombinationElements.level', 'level')
         .where(
           new Brackets((qb) => {
@@ -112,7 +112,7 @@ export class ExperimentRepository extends Repository<Experiment> {
         // .leftJoinAndSelect('partitions.factors', 'factors')
         // .leftJoinAndSelect('factors.levels', 'levels')
         // .leftJoinAndSelect('conditions.levelCombinationElements', 'levelCombinationElements')
-        .leftJoinAndSelect('conditions.conditionAliases', 'conditionAlias')
+        // .leftJoinAndSelect('conditions.conditionAliases', 'conditionAlias')
         // .leftJoinAndSelect('levelCombinationElements.level', 'level')
         .where(
           new Brackets((qb) => {
