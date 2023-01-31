@@ -1,4 +1,4 @@
-import { Entity, PrimaryColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryColumn, Column, ManyToOne, Index } from 'typeorm';
 import { BaseModel } from './base/BaseModel';
 import { ExperimentCondition } from './ExperimentCondition';
 import { DecisionPoint } from './DecisionPoint';
@@ -11,9 +11,11 @@ export class ConditionAlias extends BaseModel {
   @Column()
   public aliasName: string;
 
+  @Index()
   @ManyToOne(() => ExperimentCondition, (condition) => condition.conditionAliases, { onDelete: 'CASCADE' })
   public parentCondition: ExperimentCondition;
 
+  @Index()
   @ManyToOne(() => DecisionPoint, (decisionPoint) => decisionPoint.conditionAliases, { onDelete: 'CASCADE' })
   public decisionPoint: DecisionPoint;
 }
