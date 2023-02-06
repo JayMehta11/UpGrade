@@ -240,7 +240,9 @@ export class ExperimentUserService {
       const userDoc = await this.userRepository.findOne({
         where: { id: userId },
         relations: ['originalUser'],
+        cache: 60000
       });
+
       if (userDoc) {
         if (userDoc.originalUser) {
           // If user is alias user
