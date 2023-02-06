@@ -237,17 +237,17 @@ export class ExperimentUserService {
       logger.info({ message: `Find original user for userId ${userId}` });
     }
     try {
-      const userDoc = await this.userRepository.find({
+      const userDoc = await this.userRepository.findOne({
         where: { id: userId },
         relations: ['originalUser'],
       });
-      if (userDoc.length) {
-        if (userDoc[0].originalUser) {
+      if (userDoc) {
+        if (userDoc.originalUser) {
           // If user is alias user
-          return userDoc[0].originalUser;
+          return userDoc.originalUser;
         } else {
           // If user is original user
-          const { originalUser, ...rest } = userDoc[0];
+          const { originalUser, ...rest } = userDoc;
           return rest as any;
         }
       } else {
