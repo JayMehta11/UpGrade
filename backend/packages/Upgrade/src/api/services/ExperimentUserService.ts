@@ -82,7 +82,8 @@ export class ExperimentUserService {
       throw error;
     }
     const promiseArray = [];
-    aliases.map((aliasId) => {
+    const dedupedArray = [...new Set(aliases)];
+    dedupedArray.map((aliasId) => {
       promiseArray.push(
         this.userRepository.findOne({
           where: { id: aliasId },
