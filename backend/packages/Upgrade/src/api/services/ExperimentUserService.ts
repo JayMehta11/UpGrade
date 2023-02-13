@@ -82,8 +82,8 @@ export class ExperimentUserService {
       throw error;
     }
     const promiseArray = [];
-    const dedupedArray = [...new Set(aliases)];
-    dedupedArray.map((aliasId) => {
+    // const dedupedArray = [...new Set(aliases)];
+    aliases.map((aliasId) => {
       promiseArray.push(
         this.userRepository.findOne({
           where: { id: aliasId },
@@ -158,12 +158,25 @@ export class ExperimentUserService {
       return { ...rest, originalUser: originalUser.id };
     });
     if (userAliasesDocs.length) {
-      let aliasesUsers = await this.userRepository.save(userAliasesDocs);
-      aliasesUsers = aliasesUsers.map((user) => {
-        const { originalUser, ...rest } = user;
-        return { ...rest, originalUser: originalUser.id };
-      });
-      return [...aliasesUsers, ...alreadyLinkedAliases];
+      try {
+        let aliasesUsers = await this.userRepository.save(userAliasesDocs);
+        aliasesUsers = aliasesUsers.map((user) => {
+          const { originalUser, ...rest } = user;
+          return { ...rest, originalUser: originalUser.id };
+        });
+        return [...aliasesUsers, ...alreadyLinkedAliases];
+      } catch (err) {
+        const error = new Error(
+          `Query failed setting aliases: ${JSON.stringify(
+            userAliasesDocs,
+            null,
+            2
+          )} for user id: ${userId}`
+        );
+        (error as any).type = SERVER_ERROR.QUERY_FAILED;
+        logger.error(error);
+        throw error;
+      }
     }
     return alreadyLinkedAliases;
   }
