@@ -82,8 +82,8 @@ export class ExperimentUserService {
       throw error;
     }
     const promiseArray = [];
-    // const dedupedArray = [...new Set(aliases)];
-    aliases.map((aliasId) => {
+    const dedupedArray = [...new Set(aliases)];
+    dedupedArray.map((aliasId) => {
       promiseArray.push(
         this.userRepository.findOne({
           where: { id: aliasId },
@@ -167,11 +167,15 @@ export class ExperimentUserService {
         return [...aliasesUsers, ...alreadyLinkedAliases];
       } catch (err) {
         const error = new Error(
-          `Query failed setting aliases: ${JSON.stringify(
+          `Query failed setting aliases to db: ${JSON.stringify(
             userAliasesDocs,
             null,
             2
-          )} for user id: ${userId}`
+          )} for user id: ${userId}. Request alias payload: ${JSON.stringify(
+            aliases,
+            null,
+            2
+          )}`
         );
         (error as any).type = SERVER_ERROR.QUERY_FAILED;
         logger.error(error);
