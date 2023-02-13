@@ -166,20 +166,29 @@ export class ExperimentUserService {
         });
         return [...aliasesUsers, ...alreadyLinkedAliases];
       } catch (err) {
-        const error = new Error(
-          `Query failed setting aliases to db: ${JSON.stringify(
-            userAliasesDocs,
-            null,
-            2
-          )} for user id: ${userId}. Request alias payload: ${JSON.stringify(
-            aliases,
-            null,
-            2
-          )}`
-        );
-        (error as any).type = SERVER_ERROR.QUERY_FAILED;
-        logger.error(error);
-        throw error;
+        if (aliases && promiseResult && userAliasesDocs) {
+          const error = new Error(
+            `Query failed: Request alias payload: ${JSON.stringify(
+              aliases,
+              null,
+              2
+            )} Result of found aliases: ${JSON.stringify(
+              promiseResult,
+              null,
+              2
+            )} Failed to set these docs to db: ${JSON.stringify(
+              userAliasesDocs,
+              null,
+              2
+            )} `
+          );
+          (error as any).type = SERVER_ERROR.QUERY_FAILED;
+          logger.error(error);
+          throw error;
+        } else {
+          logger.error(err);
+          throw err;
+        }
       }
     }
     return alreadyLinkedAliases;
