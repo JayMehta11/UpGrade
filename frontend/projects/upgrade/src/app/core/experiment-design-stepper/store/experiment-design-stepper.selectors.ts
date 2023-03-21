@@ -75,6 +75,22 @@ export const selectSimpleExperimentAliasTableData = createSelector(
   (state) => state.simpleExperimentAliasTableData
 );
 
+
+export const selectIsFactorsTableEditMode = createSelector(
+  selectExperimentDesignStepperState,
+  (state) => state.isFactorsTableEditMode
+);
+
+export const selectFactorsTableEditIndex = createSelector(
+  selectExperimentDesignStepperState,
+  (state) => state.factorsTableEditIndex
+);
+
+export const selectFactorsEditModePreviousRowData = createSelector(
+  selectExperimentDesignStepperState,
+  (state) => state.factorsEditModePreviousRowData
+);
+
 export const selectFactorialConditionTableData = createSelector(
   selectExperimentDesignStepperState,
   (state) => state.factorialConditionsTableData

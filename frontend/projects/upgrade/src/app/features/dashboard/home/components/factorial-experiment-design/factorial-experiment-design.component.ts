@@ -72,7 +72,7 @@ export class FactorialExperimentDesignComponent implements OnInit, OnChanges, On
   expandedId: number = null;
   levelIds: string[] = [];
 
-  factorDisplayedColumns = ['expandIcon', 'factor', 'site', 'target', 'removeFactor'];
+  factorDisplayedColumns = ['expandIcon', 'factor', 'site', 'target', 'actions'];
   levelDisplayedColumns = ['level', 'alias', 'removeLevel'];
 
   // Used for condition code, experiment point and ids auto complete dropdown
@@ -85,6 +85,9 @@ export class FactorialExperimentDesignComponent implements OnInit, OnChanges, On
   isAnyRowRemoved = false;
   conditionTableDataUpToDate = true;
   isFormLockedForEdit$ = this.experimentDesignStepperService.isFormLockedForEdit$;
+
+  // Factor table store references
+  FactorsTableEditIndex$ = this.experimentDesignStepperService.factorsTableEditIndex$;
 
   // Alias Table details
   designData$ = new BehaviorSubject<[ExperimentDecisionPoint[], ExperimentCondition[]]>([[], []]);
@@ -204,6 +207,40 @@ export class FactorialExperimentDesignComponent implements OnInit, OnChanges, On
   handleConditionsButtonClick() {
     this.experimentDesignStepperService.updateFactorialDesignData(this.factorialExperimentDesignForm.value);
     this.scrollToConditionsTable();
+  }
+
+  handleFactorTableEditClick(rowIndex: number, rowData: ExperimentFactorFormData) {
+    if (this.isFactorTableRowValid()) {
+      this.experimentDesignStepperService.setFactorTableEditModeDetails(rowIndex, rowData);
+      this.handleFactorialDesignDataUpdate();
+    }
+  }
+
+  isFactorTableRowValid(): boolean {
+    const factor = this.factor.value;
+
+    this.validateFactorNames(factor);
+    this.validateFactorCount(factor);
+
+    return !this.factorPointErrors.length && !this.factorCountError;
+  }
+
+  handleFactorialDesignDataUpdate() {
+    // this.experimentDesignStepperService.setNewDesignData({
+    //   decisionPoints: this.decisionPoints.value,
+    //   conditions: this.conditions.value,
+    // });
+  }
+
+  handleDecisionPointTableClearOrRemoveRow(rowIndex: number): void {
+    // grab previous data before dispatching reset to store
+    // const previousRowData = this.previousDecisionPointTableRowDataBehaviorSubject$.value;
+
+    // if (previousRowData) {
+    //   this.resetPreviousDecisionPointRowDataOnEditCancel(previousRowData, rowIndex);
+    // } else {
+    //   this.removeConditionOrDecisionPoint(SIMPLE_EXP_CONSTANTS.FORM_CONTROL_NAMES.DECISION_POINTS_ARRAY, rowIndex);
+    // }
   }
 
   private filterExpFactorsPointsAndIds(value: string, key: string): string[] {

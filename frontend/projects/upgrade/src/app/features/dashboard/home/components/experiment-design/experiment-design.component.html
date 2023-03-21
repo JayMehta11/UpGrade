@@ -164,9 +164,12 @@
                     [disabled]="(isFormLockedForEdit$ | async) && (decisionPointsTableEditIndex$ | async) !== rowIndex"
                     (click)="handleDecisionPointTableClearOrRemoveRow(rowIndex)"
                   >
+                    <!-- Delete Icon -->
                     <ng-container *ngIf="(decisionPointsTableEditIndex$ | async) !== rowIndex">
                       <mat-icon class="icon">delete_outline</mat-icon>
                     </ng-container>
+                    
+                    <!-- Clear Icon -->
                     <ng-container *ngIf="(decisionPointsTableEditIndex$ | async) === rowIndex">
                       <mat-icon class="icon">clear</mat-icon>
                     </ng-container>

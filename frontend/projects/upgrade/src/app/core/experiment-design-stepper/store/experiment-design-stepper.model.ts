@@ -110,6 +110,10 @@ export interface ExperimentDesignStepperState {
   conditionsEditModePreviousRowData: ConditionsTableRowData;
   simpleExperimentDesignData: SimpleExperimentDesignData;
   simpleExperimentAliasTableData: SimpleExperimentAliasTableRow[];
+  isFactorsTableEditMode: boolean;
+  factorsTableEditIndex: number | null;
+  factorsEditModePreviousRowData: ExperimentFactorFormData;
+
   isFactorialConditionsTableEditMode: boolean;
   factorialConditionsTableEditIndex: number | null;
   factorialConditionsEditModePreviousRowData: FactorialConditionTableRowData;

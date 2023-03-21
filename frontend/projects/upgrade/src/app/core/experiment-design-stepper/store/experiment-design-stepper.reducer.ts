@@ -19,6 +19,9 @@ const initialState: ExperimentDesignStepperState = {
   isFactorialConditionsTableEditMode: false,
   factorialConditionsTableEditIndex: null,
   factorialConditionsEditModePreviousRowData: null,
+  isFactorsTableEditMode: false,
+  factorsTableEditIndex: null,
+  factorsEditModePreviousRowData: null
 };
 
 const reducer = createReducer(

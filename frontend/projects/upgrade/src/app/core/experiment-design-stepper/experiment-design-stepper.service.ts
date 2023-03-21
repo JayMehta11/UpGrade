@@ -28,6 +28,9 @@ import {
   selectSimpleExperimentAliasTableData,
   selectIsSimpleExperimentAliasTableEditMode,
   selectSimpleExperimentAliasTableEditIndex,
+  selectFactorsTableEditIndex,
+  selectIsFactorsTableEditMode,
+  selectFactorsEditModePreviousRowData,
 } from './store/experiment-design-stepper.selectors';
 import {
   DecisionPointsTableRowData,
@@ -38,6 +41,7 @@ import {
   FactorialConditionTableRowData,
   ExperimentConditionAliasRequestObject,
   SimpleExperimentDesignData,
+  ExperimentFactorFormData,
 } from './store/experiment-design-stepper.model';
 import {
   actionUpdateFactorialTableData,
@@ -71,6 +75,12 @@ export class ExperimentDesignStepperService {
   );
   factorialConditionTableDataBehaviorSubject$ = new BehaviorSubject<FactorialConditionTableRowData[]>([]);
   simpleExperimentAliasTableDataBehaviorSubject$ = new BehaviorSubject<SimpleExperimentAliasTableRow[]>([]);
+
+  isFactorsTableEditMode$ = this.store$.pipe(select(selectIsFactorsTableEditMode));
+  factorsTableEditIndex$ = this.store$.pipe(select(selectFactorsTableEditIndex));
+  factorsEditModePreviousRowData$ = this.store$.pipe(
+    select(selectFactorsEditModePreviousRowData)
+  );
 
   isFactorialConditionsTableEditMode$ = this.store$.pipe(select(selectIsFactorialConditionsTableEditMode));
   factorialConditionsTableEditIndex$ = this.store$.pipe(select(selectFactorialConditionsTableEditIndex));
@@ -136,6 +146,10 @@ export class ExperimentDesignStepperService {
 
   setNewDesignData(designData: SimpleExperimentDesignData) {
     this.store$.dispatch(experimentDesignStepperAction.actionUpdateSimpleExperimentDesignData({ designData }));
+  }
+
+  setNewFactorialDesignData(designData: ExperimentFactorialDesignData ) {
+    this.store$.dispatch(experimentDesignStepperAction.actionUpdateFactorialDesignData({ designData }));
   }
 
   validDesignDataFilter(designData: SimpleExperimentDesignData): boolean {
@@ -508,6 +522,15 @@ export class ExperimentDesignStepperService {
       experimentDesignStepperAction.actionToggleConditionsTableEditMode({
         conditionsTableEditIndex: rowIndex,
         conditionsRowData: rowData,
+      })
+    );
+  }
+
+  setFactorTableEditModeDetails(rowIndex: number, rowData: ExperimentFactorFormData): void {
+    this.store$.dispatch(
+      experimentDesignStepperAction.actionToggleFactorsTableEditMode({
+        factorTableEditIndex: rowIndex,
+        factorRowData: rowData,
       })
     );
   }

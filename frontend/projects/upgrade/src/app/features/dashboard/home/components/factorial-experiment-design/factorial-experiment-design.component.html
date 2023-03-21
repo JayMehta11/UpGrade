@@ -31,7 +31,7 @@
               <ng-container matColumnDef="expandIcon">
                 <mat-header-cell class="ft-14-700" *matHeaderCellDef></mat-header-cell>
                 <mat-cell
-                  *matCellDef="let element; let factorIndex = dataIndex"
+                  *matCellDef="let rowData; let factorIndex = dataIndex"
                   [formGroupName]="factorIndex"
                   style="justify-content: flex-start"
                 >
@@ -49,21 +49,31 @@
                 <mat-header-cell class="ft-14-700" *matHeaderCellDef>
                   {{ 'home.new-experiment.design.factor-name.text' | translate }}
                 </mat-header-cell>
-                <mat-cell *matCellDef="let element; let factorIndex = dataIndex" [formGroupName]="factorIndex">
-                  <mat-form-field floatLabel="never">
+                <mat-cell *matCellDef="let rowData; let factorIndex = dataIndex" [formGroupName]="factorIndex">
+                  <ng-container *ngIf="(decisionPointsTableEditIndex$ | async) !== groupIndex">
                     <span
                       [matTooltip]="factorialExperimentDesignForm.getRawValue('factor')?.factors[factorIndex]?.factor"
                       matTooltipPosition="above"
                     >
-                      <input
-                        matInput
-                        [placeholder]="'home.new-experiment.design.factor.placeholder.text' | translate"
-                        formControlName="factor"
-                        [value]="factor"
-                        autocomplete="off"
-                      />
+                      {{ factorialExperimentDesignForm.getRawValue('factor')?.factors[factorIndex]?.factor | truncate:35 }}
                     </span>
-                  </mat-form-field>
+                  </ng-container>
+                  <ng-container *ngIf="(decisionPointsTableEditIndex$ | async) === groupIndex">
+                    <mat-form-field floatLabel="never">
+                      <span
+                        [matTooltip]="factorialExperimentDesignForm.getRawValue('factor')?.factors[factorIndex]?.factor"
+                        matTooltipPosition="above"
+                      >
+                        <input
+                          matInput
+                          [placeholder]="'home.new-experiment.design.factor.placeholder.text' | translate"
+                          formControlName="factor"
+                          [value]="factor"
+                          autocomplete="off"
+                        />
+                      </span>
+                    </mat-form-field>
+                  </ng-container>
                 </mat-cell>
               </ng-container>
 
@@ -72,25 +82,35 @@
                 <mat-header-cell class="ft-14-700" *matHeaderCellDef>
                   {{ 'home.new-experiment.design.decision-point-site.text' | translate }}
                 </mat-header-cell>
-                <mat-cell *matCellDef="let element; let factorIndex = dataIndex" [formGroupName]="factorIndex">
-                  <mat-form-field floatLabel="never">
+                <mat-cell *matCellDef="let rowData; let factorIndex = dataIndex" [formGroupName]="factorIndex">
+                  <ng-container *ngIf="(decisionPointsTableEditIndex$ | async) !== groupIndex">
                     <span
                       [matTooltip]="factorialExperimentDesignForm.getRawValue('site')?.factors[factorIndex]?.site"
                       matTooltipPosition="above"
                     >
-                      <input
-                        matInput
-                        [placeholder]="'home.new-experiment.design.decision-point-site.placeholder.text' | translate"
-                        formControlName="site"
-                        [matAutocomplete]="autoCompleteExperimentPoints"
-                      />
-                      <mat-autocomplete #autoCompleteExperimentPoints="matAutocomplete" panelWidth="fit-content">
-                        <mat-option *ngFor="let site of filteredSites$[factorIndex] | async" [value]="site">
-                          {{ site }}
-                        </mat-option>
-                      </mat-autocomplete>
+                      {{ factorialExperimentDesignForm.getRawValue('site')?.factors[factorIndex]?.site | truncate:35 }}
                     </span>
-                  </mat-form-field>
+                  </ng-container>
+                  <ng-container *ngIf="(decisionPointsTableEditIndex$ | async) === groupIndex">
+                    <mat-form-field floatLabel="never">
+                      <span
+                        [matTooltip]="factorialExperimentDesignForm.getRawValue('site')?.factors[factorIndex]?.site"
+                        matTooltipPosition="above"
+                      >
+                        <input
+                          matInput
+                          [placeholder]="'home.new-experiment.design.decision-point-site.placeholder.text' | translate"
+                          formControlName="site"
+                          [matAutocomplete]="autoCompleteExperimentPoints"
+                        />
+                        <mat-autocomplete #autoCompleteExperimentPoints="matAutocomplete" panelWidth="fit-content">
+                          <mat-option *ngFor="let site of filteredSites$[factorIndex] | async" [value]="site">
+                            {{ site }}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </span>
+                    </mat-form-field>
+                  </ng-container>
                 </mat-cell>
               </ng-container>
 
@@ -99,55 +119,88 @@
                 <mat-header-cell class="ft-14-700" *matHeaderCellDef>
                   {{ 'home.new-experiment.design.decision-point-target.text' | translate }}
                 </mat-header-cell>
-                <mat-cell *matCellDef="let element; let factorIndex = dataIndex" [formGroupName]="factorIndex">
-                  <mat-form-field floatLabel="never">
+                <mat-cell *matCellDef="let rowData; let factorIndex = dataIndex" [formGroupName]="factorIndex">
+                  <ng-container *ngIf="(decisionPointsTableEditIndex$ | async) !== groupIndex">
                     <span
                       [matTooltip]="factorialExperimentDesignForm.getRawValue('target')?.factors[factorIndex]?.target"
                       matTooltipPosition="above"
                     >
-                      <input
-                        matInput
-                        [placeholder]="'home.new-experiment.design.decision-point-target.placeholder.text' | translate"
-                        formControlName="target"
-                        [matAutocomplete]="autoCompleteExperimentIds"
-                        autocomplete="off"
-                      />
-                      <mat-autocomplete #autoCompleteExperimentIds="matAutocomplete" panelWidth="fit-content">
-                        <mat-option *ngFor="let target of filteredTargets$[factorIndex] | async" [value]="target">
-                          {{ target }}
-                        </mat-option>
-                      </mat-autocomplete>
+                      {{ factorialExperimentDesignForm.getRawValue('target')?.factors[factorIndex]?.target | truncate:35 }}
                     </span>
-                  </mat-form-field>
+                  </ng-container>
+                  <ng-container *ngIf="(decisionPointsTableEditIndex$ | async) === groupIndex">
+                    <mat-form-field floatLabel="never">
+                      <span
+                        [matTooltip]="factorialExperimentDesignForm.getRawValue('target')?.factors[factorIndex]?.target"
+                        matTooltipPosition="above"
+                      >
+                        <input
+                          matInput
+                          [placeholder]="'home.new-experiment.design.decision-point-target.placeholder.text' | translate"
+                          formControlName="target"
+                          [matAutocomplete]="autoCompleteExperimentIds"
+                          autocomplete="off"
+                        />
+                        <mat-autocomplete #autoCompleteExperimentIds="matAutocomplete" panelWidth="fit-content">
+                          <mat-option *ngFor="let target of filteredTargets$[factorIndex] | async" [value]="target">
+                            {{ target }}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </span>
+                    </mat-form-field>
+                  </ng-container>
+                  
                 </mat-cell>
               </ng-container>
 
-              <ng-container matColumnDef="removeFactor">
+              <!-- Actions Column -->
+              <ng-container matColumnDef="actions">
                 <mat-header-cell class="ft-14-700" *matHeaderCellDef></mat-header-cell>
-                <mat-cell
-                  *matCellDef="let element; let factorIndex = dataIndex"
-                  [formGroupName]="factorIndex"
-                  style="justify-content: flex-start"
-                >
+                <mat-cell *matCellDef="let rowData; let factorIndex = dataIndex" class="actions-cell">
                   <button
-                    mat-icon-button
                     type="button"
-                    [disabled]="!isExperimentEditable"
-                    (click)="removeFactor(factorIndex)"
+                    class="row-action-btn"
+                    [disabled]="(isFormLockedForEdit$ | async) && (decisionPointsTableEditIndex$ | async) !== rowIndex"
+                    (click)="handleFactorTableEditClick(factorIndex, rowData.getRawValue())"
                   >
-                    <mat-icon class="remove-icon"> delete_outline </mat-icon>
+                    <!-- Edit Icon -->
+                    <ng-container *ngIf="(factorsTableEditIndex$ | async) !== factorIndex">
+                      <mat-icon class="icon">create</mat-icon>
+                    </ng-container>
+
+                    <!-- Done Icon -->
+                    <ng-container *ngIf="(factorsTableEditIndex$ | async) === factorIndex">
+                      <mat-icon class="icon">done</mat-icon>
+                    </ng-container>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="row-action-btn"
+                    [disabled]="(isFormLockedForEdit$ | async) && (decisionPointsTableEditIndex$ | async) !== rowIndex"
+                    (click)="handleDecisionPointTableClearOrRemoveRow(factorIndex)"
+                  >
+                    <!-- Delete Icon -->
+                    <ng-container *ngIf="(decisionPointsTableEditIndex$ | async) !== factorIndex">
+                      <mat-icon class="icon">delete_outline</mat-icon>
+                    </ng-container>
+
+                    <!-- Clear Icon -->
+                    <ng-container *ngIf="(decisionPointsTableEditIndex$ | async) === factorIndex">
+                      <mat-icon class="icon">clear</mat-icon>
+                    </ng-container>
                   </button>
                 </mat-cell>
               </ng-container>
 
               <!-- EXPANDABLE ROW -->
               <ng-container matColumnDef="expandedDetail">
-                <mat-cell *matCellDef="let element; let factorIndex = dataIndex" [formGroupName]="factorIndex">
+                <mat-cell *matCellDef="let rowData; let factorIndex = dataIndex" [formGroupName]="factorIndex">
                   <div *ngIf="factorIndex === expandedId" class="level-container">
                     <div class="level-table-container">
                       <mat-table
                         class="level-table"
-                        [dataSource]="element.controls.levels.controls"
+                        [dataSource]="rowData.controls.levels.controls"
                         formArrayName="levels"
                         #levelTable
                       >
@@ -156,7 +209,7 @@
                           <mat-header-cell class="ft-14-700" *matHeaderCellDef>
                             {{ 'home.new-experiment.design.level-name.text' | translate }}
                           </mat-header-cell>
-                          <mat-cell *matCellDef="let element; let levelIndex = index" [formGroupName]="levelIndex">
+                          <mat-cell *matCellDef="let rowData; let levelIndex = index" [formGroupName]="levelIndex">
                             <mat-form-field floatLabel="never">
                               <span
                                 [matTooltip]="
@@ -184,7 +237,7 @@
                             {{ 'home.new-experiment.design.aliases.column-header.alias.text' | translate }}
                           </mat-header-cell>
                           <mat-cell
-                            *matCellDef="let element; let levelAliasIndex = index"
+                            *matCellDef="let rowData; let levelAliasIndex = index"
                             [formGroupName]="levelAliasIndex"
                           >
                             <mat-form-field floatLabel="never">
@@ -211,7 +264,7 @@
                         <ng-container matColumnDef="removeLevel">
                           <mat-header-cell class="ft-14-700" *matHeaderCellDef></mat-header-cell>
                           <mat-cell
-                            *matCellDef="let element; let removelevelIndex = index"
+                            *matCellDef="let rowData; let removelevelIndex = index"
                             [formGroupName]="removelevelIndex"
                             style="justify-content: flex-start"
                           >

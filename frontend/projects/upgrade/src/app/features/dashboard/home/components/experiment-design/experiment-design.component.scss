@@ -108,6 +108,10 @@
             align-items: center;
             font-size: var(--text-size-x-large);
             color: gray;
+
+            &:hover {
+              cursor: pointer;
+            }
           }
         }
       }
