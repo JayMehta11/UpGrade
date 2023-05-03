@@ -13,8 +13,8 @@ export class Assignment {
     assignedFactor?: Record<string, { level: string; payload: { type: PAYLOAD_TYPE; value: string } }>
   ) {
     this._conditionCode = conditionCode;
-    this._payloadType = payload.type;
-    this._payloadValue = payload.value;
+    this._payloadType = payload?.type ? payload.type : null;
+    this._payloadValue = payload?.value ? payload.value : null;
     this._experimentType = assignedFactor ? EXPERIMENT_TYPE.FACTORIAL : EXPERIMENT_TYPE.SIMPLE;
     this._assignedFactor = assignedFactor;
   }
