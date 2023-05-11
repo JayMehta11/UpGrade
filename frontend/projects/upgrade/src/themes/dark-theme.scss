@@ -7,7 +7,7 @@
 //  If you don't need the default component typographies but still want the hierarchy styles,
 //  you can delete this line and instead use:
 //    `@include mat.legacy-typography-hierarchy(mat.define-legacy-typography-config());`
-@include mat.all-legacy-component-typographies();
+// @include mat.all-legacy-component-typographies();
 @include mat.legacy-core();
 
 mat.$blue-palette: (
@@ -87,7 +87,15 @@ $primary: mat.define-palette(mat.$blue-palette);
 $accent: mat.define-palette(mat.$light-blue-palette);
 $warn: mat.define-palette(mat.$red-palette);
 
-$dark-theme: mat.define-dark-theme($primary, $accent, $warn);
+$dark-theme: mat.define-dark-theme((
+  color: (
+    primary: $primary,
+    accent: $accent,
+    warn: $warn,
+  ),
+  // typography: mat.define-typography-config(),
+  density: -1,
+));
 
 // Insert and bind custom background color
 $background: map-get($dark-theme, background);
