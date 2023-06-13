@@ -8,19 +8,14 @@ public class MarkExperimentRequest {
 	private String userId;
 	private String site;
 	private String target;
-	private String site;
-	private String target;
 	private String condition;
 	private MarkedDecisionPointStatus status;
 	
 	public MarkExperimentRequest() {}
 
 	public MarkExperimentRequest(String userId, String site, String target, String condition) {
-	public MarkExperimentRequest(String userId, String site, String target, String condition) {
 		super();
 		this.userId = userId;
-		this.site = site;
-		this.target = target;
 		this.site = site;
 		this.target = target;
 		this.condition = condition;
@@ -29,8 +24,6 @@ public class MarkExperimentRequest {
 	public MarkExperimentRequest(String userId, String site, String target, String condition, MarkedDecisionPointStatus status) {
 		super();
 		this.userId = userId;
-		this.site = site;
-		this.target = target;
 		this.site = site;
 		this.target = target;
 		this.condition = condition;
@@ -47,24 +40,16 @@ public class MarkExperimentRequest {
 
 	public String getSite() {
 		return site;
-	public String getSite() {
-		return site;
 	}
 
-	public void setSite(String site) {
-		this.site = site;
 	public void setSite(String site) {
 		this.site = site;
 	}
 
 	public String getTarget() {
 		return target;
-	public String getTarget() {
-		return target;
 	}
 
-	public void setTarget(String target) {
-		this.target = target;
 	public void setTarget(String target) {
 		this.target = target;
 	}

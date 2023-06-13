@@ -28,8 +28,6 @@ import org.upgradeplatform.requestbeans.SingleMetric;
 import org.upgradeplatform.requestbeans.UserAlias;
 import org.upgradeplatform.responsebeans.UserAliasResponse;
 import org.upgradeplatform.responsebeans.Condition;
-import org.upgradeplatform.responsebeans.UserAliasResponse;
-import org.upgradeplatform.responsebeans.Condition;
 import org.upgradeplatform.responsebeans.ErrorResponse;
 import org.upgradeplatform.responsebeans.ExperimentUser;
 import org.upgradeplatform.responsebeans.ExperimentsResponse;
@@ -130,7 +128,6 @@ public class ExperimentClient implements AutoCloseable {
 
 		// Invoke the method
 		invocation.method(PATCH, requestContent,new PublishingRetryCallback<>(invocation, requestContent, MAX_RETRIES, RequestType.PATCH, 
-		invocation.method(PATCH, requestContent,new PublishingRetryCallback<>(invocation, requestContent, MAX_RETRIES, RequestType.PATCH, 
 				new InvocationCallback<Response>() {
 
 			@Override
@@ -157,7 +154,6 @@ public class ExperimentClient implements AutoCloseable {
 		AsyncInvoker invocation = this.apiService.prepareRequest(SET_WORKING_GROUP);
 		Entity<ExperimentUser> requestContent = Entity.json(experimentUser);
 
-		invocation.method(PATCH, requestContent,new PublishingRetryCallback<>(invocation, requestContent, MAX_RETRIES, RequestType.PATCH,
 		invocation.method(PATCH, requestContent,new PublishingRetryCallback<>(invocation, requestContent, MAX_RETRIES, RequestType.PATCH,
 				new InvocationCallback<Response>() {
 
@@ -213,21 +209,14 @@ public class ExperimentClient implements AutoCloseable {
     /**@param site This is matched case-insensitively*/
 	public void getExperimentCondition(String context, String site, final ResponseCallback<ExperimentsResponse> callbacks) {
 		getExperimentCondition(context, site, null, callbacks);
-    /**@param site This is matched case-insensitively*/
-	public void getExperimentCondition(String context, String site, final ResponseCallback<ExperimentsResponse> callbacks) {
-		getExperimentCondition(context, site, null, callbacks);
 	}
 
-    /**@param site This is matched case-insensitively
-     * @param target This is matched case-insensitively*/
-	public void getExperimentCondition(String context, String site, String target,
     /**@param site This is matched case-insensitively
      * @param target This is matched case-insensitively*/
 	public void getExperimentCondition(String context, String site, String target,
 			final ResponseCallback<ExperimentsResponse> callbacks) {
 		if (this.allExperiments != null) {
 
-			ExperimentsResponse resultCondition = findExperimentResponse(site, target, allExperiments);
 			ExperimentsResponse resultCondition = findExperimentResponse(site, target, allExperiments);
 
 			if (callbacks != null) {
@@ -238,7 +227,6 @@ public class ExperimentClient implements AutoCloseable {
 				@Override
 				public void onSuccess(@NonNull List<ExperimentsResponse> experiments) {
 
-					ExperimentsResponse resultCondition = findExperimentResponse(site, target, experiments);
 					ExperimentsResponse resultCondition = findExperimentResponse(site, target, experiments);
 
 					if (callbacks != null) {
@@ -257,12 +245,8 @@ public class ExperimentClient implements AutoCloseable {
 	}
 
 	private ExperimentsResponse findExperimentResponse(String site, String target,
-	private ExperimentsResponse findExperimentResponse(String site, String target,
 			List<ExperimentsResponse> experiments) {
 		return experiments.stream()
-				.filter(t -> t.getSite().equalsIgnoreCase(site) &&
-						(isStringNull(target) ? isStringNull(t.getTarget().toString())
-								: t.getTarget().toString().equalsIgnoreCase(target)))
 				.filter(t -> t.getSite().equalsIgnoreCase(site) &&
 						(isStringNull(target) ? isStringNull(t.getTarget().toString())
 								: t.getTarget().toString().equalsIgnoreCase(target)))
@@ -274,28 +258,22 @@ public class ExperimentClient implements AutoCloseable {
 	private static ExperimentsResponse copyExperimentResponse(ExperimentsResponse experimentsResponse) {
 		Condition assignedCondition = new Condition(
 				experimentsResponse.getAssignedCondition().getCondition());
-		Condition assignedCondition = new Condition(
-				experimentsResponse.getAssignedCondition().getCondition());
 
-		ExperimentsResponse resultCondition = new ExperimentsResponse(experimentsResponse.getTarget().toString(),
-				experimentsResponse.getSite(), assignedCondition);
 		ExperimentsResponse resultCondition = new ExperimentsResponse(experimentsResponse.getTarget().toString(),
 				experimentsResponse.getSite(), assignedCondition);
 		return resultCondition;
 	}
 
 	public void markExperimentPoint(final String site, String condition, MarkedDecisionPointStatus status,
-	public void markExperimentPoint(final String site, String condition, MarkedDecisionPointStatus status,
 			final ResponseCallback<MarkExperimentPoint> callbacks) {
-		markExperimentPoint(site, "", condition, status, callbacks);
 		markExperimentPoint(site, "", condition, status, callbacks);
 	}
 
 	public void markExperimentPoint(final String site, String target, String condition, MarkedDecisionPointStatus status,
-	public void markExperimentPoint(final String site, String target, String condition, MarkedDecisionPointStatus status,
 			final ResponseCallback<MarkExperimentPoint> callbacks) {
 		MarkExperimentRequest markExperimentRequest = new MarkExperimentRequest(this.userId, site,
-				target, condition, status.toString());
+				target, condition, status);
+		System.out.println(markExperimentRequest);
 		AsyncInvoker invocation = this.apiService.prepareRequest(MARK_EXPERIMENT_POINT);
 
 		Entity<MarkExperimentRequest> requestContent = Entity.json(markExperimentRequest);
@@ -308,7 +286,6 @@ public class ExperimentClient implements AutoCloseable {
 			public void completed(Response response) {
 				if (response.getStatus() == Response.Status.OK.getStatusCode()) {
 
-				    readResponseToCallback(response, callbacks, MarkExperimentPoint.class);
 				    readResponseToCallback(response, callbacks, MarkExperimentPoint.class);
 				} else {
 					String status = Response.Status.fromStatusCode(response.getStatus()).toString();
@@ -403,7 +380,6 @@ public class ExperimentClient implements AutoCloseable {
 	}
 
 	public void setAltUserIds(final List<String> altUserIds, final ResponseCallback<UserAliasResponse> callbacks) {
-	public void setAltUserIds(final List<String> altUserIds, final ResponseCallback<UserAliasResponse> callbacks) {
 
 		UserAlias userAlias = new UserAlias(this.userId, altUserIds );
 
@@ -411,13 +387,11 @@ public class ExperimentClient implements AutoCloseable {
 		Entity<UserAlias> requestContent = Entity.json(userAlias);
 
 		invocation.method(PATCH, requestContent,new PublishingRetryCallback<>(invocation, requestContent, MAX_RETRIES, RequestType.PATCH,
-		invocation.method(PATCH, requestContent,new PublishingRetryCallback<>(invocation, requestContent, MAX_RETRIES, RequestType.PATCH,
 				new InvocationCallback<Response>() {
 
 			@Override
 			public void completed(Response response) {
 				if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-				    readResponseToCallback(response, callbacks, new GenericType<UserAliasResponse>() {});
 				    readResponseToCallback(response, callbacks, new GenericType<UserAliasResponse>() {});
 				} else {
 					String status = Response.Status.fromStatusCode(response.getStatus()).toString();
