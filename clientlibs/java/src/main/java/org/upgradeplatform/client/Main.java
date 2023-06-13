@@ -1,7 +1,11 @@
 package org.upgradeplatform.client;
 
 import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +17,7 @@ import org.eclipse.jdt.annotation.NonNull;
 import org.upgradeplatform.interfaces.ResponseCallback;
 import org.upgradeplatform.responsebeans.Condition;
 import org.upgradeplatform.responsebeans.ErrorResponse;
+import org.upgradeplatform.responsebeans.ExperimentUser;
 import org.upgradeplatform.responsebeans.ExperimentUser;
 import org.upgradeplatform.responsebeans.ExperimentsResponse;
 import org.upgradeplatform.responsebeans.InitializeUser;

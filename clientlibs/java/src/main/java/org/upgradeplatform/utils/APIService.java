@@ -59,6 +59,7 @@ public class APIService implements AutoCloseable{
 				.request(MediaType.APPLICATION_JSON)
 				.header("Authorization", "Bearer "+this.authToken)
 				.header("Session-Id", this.sessionId)
+				.property(HttpUrlConnectorProvider.SET_METHOD_WORKAROUND, true)
 				.async();
 	}
 

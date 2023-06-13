@@ -51,7 +51,7 @@ async function fetchData(
       keepalive: sendAsAnalytics === true
     };
 
-    if (requestType === Types.REQUEST_TYPES.POST) {
+    if (requestType === Types.REQUEST_TYPES.POST || requestType === Types.REQUEST_TYPES.PATCH) {
       options = {
         ...options,
         body: JSON.stringify(data)

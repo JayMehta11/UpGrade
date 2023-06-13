@@ -45,16 +45,12 @@ export class CacheService {
     }
 
     const data = await functionToCall();
-    //
-    try {
-      await Promise.all(
-        keys.map((key, index) => {
-          return this.setCache(key, data[index]);
-        })
-      );
-      return data;
-    } catch (err) {
-      throw err;
-    }
+
+    await Promise.all(
+      keys.map((key, index) => {
+        return this.setCache(key, data[index]);
+      })
+    );
+    return data;
   }
 }

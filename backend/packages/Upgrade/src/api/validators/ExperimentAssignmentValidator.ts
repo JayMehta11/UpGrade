@@ -6,8 +6,8 @@ export class ExperimentAssignmentValidator {
     @IsUUID()
     public experimentId: string;
 
-    @IsNotEmpty()
-    public experimentPoint: string;
+  @IsNotEmpty()
+  public site: string;
 
     @IsNotEmpty()
     public userId: string;
