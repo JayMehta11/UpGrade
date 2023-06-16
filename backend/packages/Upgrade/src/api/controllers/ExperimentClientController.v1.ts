@@ -13,7 +13,6 @@ import {
 } from 'routing-controllers';
 import { ExperimentService } from '../services/ExperimentService';
 import { ExperimentAssignmentService } from '../services/ExperimentAssignmentService';
-import { MarkExperimentValidator } from './validators/MarkExperimentValidator.v1';
 import { ExperimentAssignmentValidator } from './validators/ExperimentAssignmentValidator';
 import { ExperimentUser } from '../models/ExperimentUser';
 import { ExperimentUserService } from '../services/ExperimentUserService';
@@ -27,8 +26,6 @@ import {
   IUserAliases,
   IWorkingGroup,
 } from 'upgrade_types';
-import { FailedParamsValidator } from './validators/FailedParamsValidator.v1';
-import { ExperimentError } from '../models/ExperimentError';
 import { FeatureFlag } from '../models/FeatureFlag';
 import { FeatureFlagService } from '../services/FeatureFlagService';
 import { ClientLibMiddleware } from '../middlewares/ClientLibMiddleware';
@@ -40,6 +37,7 @@ import * as express from 'express';
 import { AppRequest } from '../../types';
 import { env } from '../../env';
 import { MonitoredDecisionPointLog } from '../models/MonitoredDecisionPointLog';
+import { MarkExperimentValidator } from './validators/MarkExperimentValidator.v1';
 
 interface ILog {
   id: string;
@@ -684,63 +682,6 @@ export class ExperimentClientController {
     });
   }
 
-  /**
-   * @swagger
-   * /failed:
-   *    post:
-   *       description: Add error from client end
-   *       consumes:
-   *         - application/json
-   *       parameters:
-   *          - in: body
-   *            name: experimentError
-   *            required: false
-   *            schema:
-   *             type: object
-   *             properties:
-   *              reason:
-   *                type: string
-   *              site:
-   *                type: string
-   *              userId:
-   *                type: string
-   *              target:
-   *                type: string
-   *            description: Experiment Error from client
-   *       tags:
-   *         - Client Side SDK
-   *       produces:
-   *         - application/json
-   *       responses:
-   *          '200':
-   *            description: Client side reported error
-   *          '500':
-   *            description: null value in column "id\" of relation \"experiment_user\" violates not-null constraint
-   */
-  @Post('failed')
-  public async failedExperimentPoint(
-    @Body({ validate: { validationError: { target: false, value: false } } })
-    @Req()
-    request: AppRequest,
-    errorBody: FailedParamsValidator
-  ): Promise<ExperimentError> {
-    const experimentUserDoc = await this.getUserDoc(errorBody.userId, request.logger);
-    if (experimentUserDoc) {
-      // append userDoc in logger
-      request.logger.child({ userDoc: experimentUserDoc });
-      request.logger.info({ message: 'Got the original user doc' });
-    }
-    return this.experimentAssignmentService.clientFailedExperimentPoint(
-      errorBody.reason,
-      errorBody.site,
-      errorBody.userId,
-      errorBody.target,
-      {
-        logger: request.logger,
-        userDoc: experimentUserDoc,
-      }
-    );
-  }
 
   /**
    * @swagger
