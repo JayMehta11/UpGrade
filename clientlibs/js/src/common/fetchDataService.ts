@@ -1,6 +1,6 @@
 import { Interfaces, Types } from '../identifiers';
-import * as fetch from 'isomorphic-fetch';
-import * as uuid  from 'uuid';
+import axios, { AxiosRequestConfig } from 'axios';
+import * as uuid from 'uuid';
 
 // Call this function with url and data which is used in body of request
 export default async function fetchDataService(
@@ -42,31 +42,48 @@ async function fetchData(
     }
 
     typeof window !== 'undefined'
-      ? headers = {...headers, 'Client source': 'Browser'} 
-      : headers = {...headers, 'Client source': 'Node'};
+      ? headers = {...headers, 'XClient source': 'Browser'} 
+      : headers = {...headers, 'XClient source': 'Node'};
 
-    let options: Interfaces.IRequestOptions = {
+    let options: AxiosRequestConfig = {
       headers,
       method: requestType,
-      keepalive: sendAsAnalytics === true
     };
 
-    if (requestType === Types.REQUEST_TYPES.POST) {
-      options = {
-        ...options,
-        body: JSON.stringify(data)
+    if (
+      typeof window === 'undefined' &&
+      typeof process !== 'undefined' &&
+      process.release &&
+      process.release.name === 'node'
+    ) {
+      if (sendAsAnalytics) {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const http = require('http');
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const https = require('https');
+        options.httpAgent = new http.Agent({ keepAlive: true });
+        options.httpsAgent = new https.Agent({ keepAlive: true });
       }
     }
 
-    const response = await fetch(url, options);
-    const responseData = await response.json();
-    // If value of ok is false then it's error
-    if (response.ok) {
-      return {
-        status: true,
-        data: responseData
+    if (requestType === Types.REQUEST_TYPES.POST || requestType === Types.REQUEST_TYPES.PATCH) {
+      options = {
+        ...options,
+        data,
       };
-    } else {
+    }
+
+    const response = await axios({
+      url,
+      ...options,
+    }).then((res) => {
+      return res;
+    });
+
+    const responseData = response.data;
+    const statusCode = response.status;
+
+    if (statusCode > 400 && statusCode < 500) {
       // If response status code is in the skipRetryOnStatusCodes, don't attempt retry
       if (skipRetryOnStatusCodes.includes(response.status)) {
         return {
@@ -85,6 +102,11 @@ async function fetchData(
           message: responseData
         }
       }
+    } else {
+      return {
+        status: true,
+        data: responseData,
+      };
     }
   } catch (error) {
       return {
