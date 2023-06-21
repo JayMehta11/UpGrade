@@ -41,9 +41,9 @@ async function fetchData(
       }
     }
 
-    typeof window !== 'undefined'
-      ? headers = {...headers, 'XClient source': 'Browser'} 
-      : headers = {...headers, 'XClient source': 'Node'};
+    // typeof window !== 'undefined'
+    //   ? headers = {...headers, 'Client source': 'Browser'} 
+    //   : headers = {...headers, 'Client source': 'Node'};
 
     let options: AxiosRequestConfig = {
       headers,
