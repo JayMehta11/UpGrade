@@ -25,7 +25,7 @@ app.get('/api', (req: Request, res: Response) => {
 
 app.get('/api/mock-app-models', (req: Request, res: Response) => {
   // get the models from the mock apps themselves
-  const models = [ 
+  const models = [
     new GeneralTSBackendVersion1().getAppInterfaceModel(),
     new GeneralTSBackendVersion5().getAppInterfaceModel(),
   ];

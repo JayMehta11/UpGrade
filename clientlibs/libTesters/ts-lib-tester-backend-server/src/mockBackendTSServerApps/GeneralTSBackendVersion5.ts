@@ -1,5 +1,5 @@
 import { AbstractTSBackendMockApp } from './AbstractTSBackendMockApp';
-import UpgradeClient from 'upgrade_client_local/dist/node';
+import UpgradeClient from 'upgrade_client_lib/dist/node';
 
 import { MOCK_APP_NAMES } from '../../../shared/constants';
 
@@ -27,15 +27,27 @@ export class GeneralTSBackendVersion5 extends AbstractTSBackendMockApp {
   public DESCRIPTION = 'Regression testing for lib version 5';
   public TYPE: MockAppType = 'frontend';
   public LANGUAGE: CodeLanguage = 'ts';
+  // -------- Old data ---------
+  // public SITES = {
+  //   TEST: 'test',
+  // };
+  // public TARGETS = {
+  //   TARGET_1: 'target_1',
+  //   TARGET_2: 'target_2',
+  // };
+  // public GROUPS = ['schoolId', 'classId', 'instructorId'];
+  // public CONTEXT = 'add'; // what should this be really?
+  // -------- Old data ---------
+
   public SITES = {
-    TEST: 'test',
+    TEST: 'area',
   };
   public TARGETS = {
-    TARGET_1: 'target_1',
-    TARGET_2: 'target_2',
+    TARGET_1: 'question_type',
   };
   public GROUPS = ['schoolId', 'classId', 'instructorId'];
-  public CONTEXT = 'add'; // what should this be really?
+  public CONTEXT = 'maths'; // what should this be really?
+
   public HOOKNAMES = {
     INIT: 'init',
     ASSIGN: 'assign',
@@ -45,10 +57,7 @@ export class GeneralTSBackendVersion5 extends AbstractTSBackendMockApp {
     SET_ALT_USER_IDS: 'setAltUserIds',
     LOG: 'log',
   };
-  public DECISION_POINTS = [
-    { site: this.SITES.TEST, target: this.TARGETS.TARGET_1 },
-    { site: this.SITES.TEST, target: this.TARGETS.TARGET_2 },
-  ];
+  public DECISION_POINTS = [{ site: this.SITES.TEST, target: this.TARGETS.TARGET_1 }];
 
   constructor(UpgradeClientConstructor?: any) {
     super(UpgradeClientConstructor);

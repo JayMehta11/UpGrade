@@ -220,7 +220,7 @@ export class GeneralTSBackendVersion1 extends AbstractTSBackendMockApp {
       const markResponse = await this.upgradeClient.markExperimentPoint(
         this.SITES.TEST,
         'control',
-        this.TARGETS.TARGET_1,
+        this.TARGETS.TARGET_1
       );
       console.log({ markResponse });
       return {
@@ -293,7 +293,6 @@ export class GeneralTSBackendVersion1 extends AbstractTSBackendMockApp {
     this.upgradeClient = this.constructUpgradeClient(hookEvent.user.id, hookEvent.apiHostUrl);
 
     const workingGroupMap = new Map<string, string>();
-
 
     try {
       const workingGroupMembershipResponse = await this.upgradeClient.setWorkingGroup(workingGroupMap);
