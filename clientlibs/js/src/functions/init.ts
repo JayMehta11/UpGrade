@@ -22,7 +22,7 @@ export default async function init(
       const groupObj = convertMapToObj(group);
       data = {
         ...data,
-        groupObj
+        group: groupObj
       }
     }
 
