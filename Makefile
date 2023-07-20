@@ -9,7 +9,7 @@ frontendContainer := upgrade-frontend-1
 
 libtesterUIDockerfile := ./clientlibs/libTesters/client-lib-tester-frontend/dev.Dockerfile
 libtesterUIImage := upgrade-libtester-ui:latest
-libtesterContainer := upgrade-libtester-ui-1
+libtesterContainer := upgrade-clientlibs-1
 
 postgresContainer := upgrade-postgres-1
 postgresOutputPath := __ABSOLUTE_PATH_TO_BACKUP_AND_RESTORE_FILES__

@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: ./frontend/dev.Dockerfile
     image: upgrade-frontend:latest
-    user: "node"
+    user: 'node'
     environment:
       - NODE_ENV=development
     volumes:
@@ -12,14 +12,14 @@ services:
     networks:
       - localdev
     ports:
-      - "4200:4200"
-  
+      - '4200:4200'
+
   backend:
     build:
       context: .
       dockerfile: ./backend/dev.Dockerfile
     image: upgrade-backend:latest
-    user: "node"
+    user: 'node'
     env_file:
       - ./backend/packages/Upgrade/.env.docker.local
     environment:
@@ -29,9 +29,9 @@ services:
     networks:
       - localdev
     ports:
-      - "3030:3030"
+      - '3030:3030'
     depends_on:
-      - "postgres"
+      - 'postgres'
 
   postgres:
     image: postgres:alpine
@@ -42,7 +42,7 @@ services:
     networks:
       - localdev
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - upgradedbdata:/var/lib/postgresql/data
 
@@ -54,15 +54,15 @@ services:
     volumes:
       - ./clientlibs/libTesters/client-lib-tester-frontend:/usr/src/app/clientlibs/libTesters/client-lib-tester-frontend
     ports:
-      - "4201:4201"
+      - '4201:4201'
     networks:
       - localdev
     profiles:
       - libtesters
-  
+
 volumes:
   upgradedbdata:
 
 networks:
   localdev:
-    driver: "bridge"
+    driver: 'bridge'
