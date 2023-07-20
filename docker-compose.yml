@@ -45,6 +45,20 @@ services:
       - "5432:5432"
     volumes:
       - upgradedbdata:/var/lib/postgresql/data
+
+  clientlibs:
+    build:
+      context: .
+      dockerfile: ./clientlibs/libTesters/client-lib-tester-frontend/dev.Dockerfile
+    image: upgrade-lib-testers:latest
+    volumes:
+      - ./clientlibs/libTesters/client-lib-tester-frontend:/usr/src/app/clientlibs/libTesters/client-lib-tester-frontend
+    ports:
+      - "4201:4201"
+    networks:
+      - localdev
+    profiles:
+      - libtesters
   
 volumes:
   upgradedbdata:

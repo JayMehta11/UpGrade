@@ -7,6 +7,10 @@ frontendDockerfile := ./frontend/dev.Dockerfile
 frontendImage := upgrade-frontend:latest
 frontendContainer := upgrade-frontend-1
 
+libtesterUIDockerfile := ./clientlibs/libTesters/client-lib-tester-frontend/dev.Dockerfile
+libtesterUIImage := upgrade-libtester-ui:latest
+libtesterContainer := upgrade-libtester-ui-1
+
 postgresContainer := upgrade-postgres-1
 postgresOutputPath := __ABSOLUTE_PATH_TO_BACKUP_AND_RESTORE_FILES__
 postgresBackupFile := local-upgrade-dev-postgres.`date +%Y%m%d`.sql
@@ -16,6 +20,10 @@ postgresRestoreFile := staging-cli-upgrade-dev-postgres.20220131.sql
 default:
 	@echo "---- Launching Environment ----"
 	docker-compose up -d
+
+libtesters:
+	@echo "---- Launching LibTesters ----"
+	docker-compose --profile libtesters up -d
 
 images: 
 	@echo "---- Building Docker Images ----"
@@ -30,6 +38,10 @@ image-frontend:
 	@echo "---- Building Frontend Docker Image ----"
 	docker build -f $(frontendDockerfile) -t $(frontendImage) .
 
+image-libtester-ui:
+	@echo "---- Building LibTester UI Docker Image ----"
+	docker build -f $(libtesterUIDockerfile) -t $(libtesterUIImage) .
+
 log-backend:
 	@echo "---- Backend Logs ----"
 	docker logs -f -t --details $(backendContainer)
@@ -42,6 +54,10 @@ log-db:
 	@echo "---- Database Logs ----"
 	docker logs -f -t --details $(postgresContainer)
 
+log-libtester-ui:
+	@echo "---- LibTester UI Logs ----"
+	docker logs -f -t --details $(libtesterContainer)
+
 bash-backend-container:
 	@echo "---- Entering Backend Container ----"
 	docker exec -it $(backendContainer) /bin/sh
@@ -53,6 +69,10 @@ bash-frontend-container:
 bash-db-container:
 	@echo "---- Entering Database Container ----"
 	docker exec -it $(postgresContainer) /bin/sh
+
+bash-libtester-ui-container:
+	@echo "---- Entering LibTester UI Container ----"
+	docker exec -it $(libtesterContainer) /bin/sh
 
 down:
 	@echo "---- Taking Environment Down ----"
