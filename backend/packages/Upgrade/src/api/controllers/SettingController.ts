@@ -63,7 +63,7 @@ export class SettingController {
    */
   @Post()
   public upsertSetting(
-    @Body({ validate: true })
+    @Body()
     settingParams: SettingParamsValidator,
     @Req() request: AppRequest
   ): Promise<Setting> {

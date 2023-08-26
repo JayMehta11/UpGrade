@@ -175,7 +175,7 @@ export class ExperimentClientController {
   public async init(
     @Req()
     request: AppRequest,
-    @Body({ validate: true })
+    @Body()
     experimentUser: ExperimentUserValidator
   ): Promise<Pick<ExperimentUser, 'id' | 'group' | 'workingGroup'>> {
     request.logger.info({ message: 'Starting the init call for user' });
@@ -252,7 +252,7 @@ export class ExperimentClientController {
   public async setGroupMemberShip(
     @Req()
     request: AppRequest,
-    @Body({ validate: true })
+    @Body()
     experimentUser: ExperimentUserValidator
   ): Promise<IGroupMembership> {
     request.logger.info({ message: 'Starting the groupmembership call for user' });
@@ -320,7 +320,7 @@ export class ExperimentClientController {
   public async setWorkingGroup(
     @Req()
     request: AppRequest,
-    @Body({ validate: true })
+    @Body()
     workingGroupParams: UpdateWorkingGroupValidator
   ): Promise<IWorkingGroup> {
     request.logger.info({ message: 'Starting the workinggroup call for user' });
@@ -415,7 +415,7 @@ export class ExperimentClientController {
   public async markExperimentPoint(
     @Req()
     request: AppRequest,
-    @Body({ validate: true })
+    @Body()
     experiment: MarkExperimentValidatorv4
   ): Promise<IMonitoredDecisionPoint> {
     request.logger.info({ message: 'Starting the markExperimentPoint call for user' });
@@ -500,7 +500,7 @@ export class ExperimentClientController {
   public async getAllExperimentConditions(
     @Req()
     request: AppRequest,
-    @Body({ validate: true })
+    @Body()
     experiment: ExperimentAssignmentValidator
   ): Promise<IExperimentAssignmentv4[]> {
     request.logger.info({ message: 'Starting the getAllExperimentConditions call for user' });
@@ -614,7 +614,7 @@ export class ExperimentClientController {
   public async log(
     @Req()
     request: AppRequest,
-    @Body({ validate: true })
+    @Body()
     logData: LogValidator
   ): Promise<Omit<Log, 'createdAt' | 'updatedAt' | 'versionNumber'>[]> {
     request.logger.info({ message: 'Starting the log call for user' });
@@ -658,7 +658,7 @@ export class ExperimentClientController {
    */
   @Post('log/caliper')
   public async caliperLog(
-    @Body({ validate: true })
+    @Body()
     envelope: CaliperLogEnvelope,
     @Req()
     request: AppRequest
@@ -796,7 +796,7 @@ export class ExperimentClientController {
   public async filterMetrics(
     @Req()
     request: AppRequest,
-    @Body({ validate: true })
+    @Body()
     metric: MetricValidator
   ): Promise<Metric[]> {
     return await this.metricService.saveAllMetrics(metric.metricUnit, request.logger);

@@ -107,7 +107,7 @@ export class UserController {
    */
   @Post()
   public create(
-    @Body({ validate: true })
+    @Body()
     users: ExperimentUserArrayValidator,
     @Req() request: AppRequest
   ): Promise<ExperimentUser[]> {
@@ -146,7 +146,7 @@ export class UserController {
   @Put('/:id')
   public update(
     @Param('id') id: string,
-    @Body({ validate: true }) user: ExperimentUserValidator,
+    @Body() user: ExperimentUserValidator,
     @Req() request: AppRequest
   ): Promise<ExperimentUser> {
     return this.userService.update(id, user, request.logger);

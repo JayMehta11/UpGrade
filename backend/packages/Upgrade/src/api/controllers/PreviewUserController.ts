@@ -80,7 +80,7 @@ export class PreviewUserController {
    */
   @Post('/paginated')
   public async paginatedFind(
-    @Body({ validate: true }) paginatedParams: PaginatedParamsValidator,
+    @Body() paginatedParams: PaginatedParamsValidator,
     @Req() request: AppRequest
   ): Promise<PreviewUserPaginationInfo> {
     if (!paginatedParams) {
@@ -161,7 +161,7 @@ export class PreviewUserController {
    *            description: New ExperimentUser is created
    */
   @Post()
-  public create(@Body({ validate: true }) users: PreviewUserValidator, @Req() request: AppRequest): Promise<PreviewUser> {
+  public create(@Body() users: PreviewUserValidator, @Req() request: AppRequest): Promise<PreviewUser> {
     return this.previewUserService.create(users, request.logger);
   }
 
@@ -197,7 +197,7 @@ export class PreviewUserController {
   @Put('/:id')
   public update(
     @Param('id') id: string,
-    @Body({ validate: true }) user: PreviewUserValidator,
+    @Body() user: PreviewUserValidator,
     @Req() request: AppRequest
   ): Promise<PreviewUser> {
     return this.previewUserService.update(id, user, request.logger);
@@ -252,7 +252,7 @@ export class PreviewUserController {
    *            description: Assignment is created
    */
   @Post('/assign')
-  public assign(@Body({ validate: true }) user: PreviewUserValidator, @Req() request: AppRequest): Promise<PreviewUser> {
+  public assign(@Body() user: PreviewUserValidator, @Req() request: AppRequest): Promise<PreviewUser> {
     return this.previewUserService.upsertExperimentConditionAssignment(user, request.logger);
   }
 }

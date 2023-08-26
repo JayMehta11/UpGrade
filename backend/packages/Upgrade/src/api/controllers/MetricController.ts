@@ -72,7 +72,7 @@ export class MetricController {
    */
   @Post('/save')
   public filterMetrics(
-    @Body({ validate: true }) metric: MetricValidator,
+    @Body() metric: MetricValidator,
     @Req() request: AppRequest
   ): Promise<IMetricUnit[]> {
     return this.metricService.upsertAllMetrics(metric.metricUnit, request.logger);

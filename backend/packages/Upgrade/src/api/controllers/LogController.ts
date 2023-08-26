@@ -61,7 +61,7 @@ export class AuditLogController {
    */
   @Post('audit')
   public async getAuditLogService(
-    @Body({ validate: true }) logParams: AuditLogParamsValidator
+    @Body() logParams: AuditLogParamsValidator
   ): Promise<ExperimentAuditPaginationInfo> {
     const [nodes, total] = await Promise.all([
       this.auditService.getAuditLogs(logParams.take, logParams.skip, logParams.filter),
@@ -119,7 +119,7 @@ export class AuditLogController {
    */
   @Post('error')
   public async getErrorLogService(
-    @Body({ validate: true }) logParams: ErrorLogParamsValidator
+    @Body() logParams: ErrorLogParamsValidator
   ): Promise<ExperimentErrorPaginatedInfo> {
     const [nodes, total] = await Promise.all([
       this.errorService.getErrorLogs(logParams.take, logParams.skip, logParams.filter),

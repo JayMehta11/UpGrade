@@ -287,7 +287,7 @@ export class SegmentController {
    */
   @Post()
   public upsertSegment(
-    @Body({ validate: true }) segment: SegmentInputValidator,
+    @Body() segment: SegmentInputValidator,
     @Req() request: AppRequest
   ): Promise<Segment> {
     return this.segmentService.upsertSegment(segment, request.logger);

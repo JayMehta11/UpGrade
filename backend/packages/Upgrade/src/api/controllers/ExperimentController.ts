@@ -703,7 +703,7 @@ export class ExperimentController {
    */
   @Post('/paginated')
   public async paginatedFind(
-    @Body({ validate: true })
+    @Body()
     paginatedParams: ExperimentPaginatedParamsValidator,
     @Req()
     request: AppRequest
@@ -932,7 +932,7 @@ export class ExperimentController {
 
   @Post()
   public create(
-    @Body({ validate: true }) experiment: ExperimentDTO,
+    @Body() experiment: ExperimentDTO,
     @CurrentUser() currentUser: User,
     @Req() request: AppRequest
   ): Promise<ExperimentDTO> {
@@ -973,7 +973,7 @@ export class ExperimentController {
 
   @Post('/batch')
   public createMultipleExperiments(
-    @Body({ validate: true, type: ExperimentDTO }) experiment: ExperimentDTO[],
+    @Body({ type: ExperimentDTO }) experiment: ExperimentDTO[],
     @CurrentUser() currentUser: User,
     @Req() request: AppRequest
   ): Promise<ExperimentDTO[]> {
@@ -1061,7 +1061,7 @@ export class ExperimentController {
    */
   @Post('/state')
   public async updateState(
-    @Body({ validate: true })
+    @Body()
     experiment: AssignmentStateUpdateValidator,
     @CurrentUser() currentUser: User,
     @Req() request: AppRequest
@@ -1125,7 +1125,7 @@ export class ExperimentController {
   @Put('/:id')
   public update(
     @Param('id') id: string,
-    @Body({ validate: true })
+    @Body()
     experiment: ExperimentDTO,
     @CurrentUser() currentUser: User,
     @Req() request: AppRequest
@@ -1162,7 +1162,7 @@ export class ExperimentController {
    */
   @Post('/import')
   public importExperiment(
-    @Body({ validate: true, type: ExperimentDTO })
+    @Body({ type: ExperimentDTO })
     experiments: ExperimentDTO[],
     @CurrentUser() currentUser: User,
     @Req() request: AppRequest
@@ -1172,7 +1172,7 @@ export class ExperimentController {
 
   @Post('/export')
   public exportExperiment(
-    @Body({ validate: true, type: String }) ids: string[],
+    @Body({ type: String }) ids: string[],
     @CurrentUser() currentUser: User,
     @Req() request: AppRequest
   ): Promise<ExperimentDTO[]> {
