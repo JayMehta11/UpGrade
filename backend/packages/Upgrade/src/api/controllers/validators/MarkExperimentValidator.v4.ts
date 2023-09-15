@@ -100,11 +100,6 @@ class Data {
   @IsString()
   target: string;
 
-  @IsEnum(EXPERIMENT_TYPE)
-  @IsDefined()
-  @IsNotEmpty()
-  experimentType: EXPERIMENT_TYPE;
-
   @IsOptional()
   @ValidateNested()
   @Type(() => AssignedCondition)
