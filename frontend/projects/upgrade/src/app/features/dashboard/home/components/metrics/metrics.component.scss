@@ -1,0 +1,126 @@
+.metric-design {
+  .metric-table {
+    margin-top: 5px;
+    max-height: 400px;
+    overflow: auto;
+
+    mat-header-row {
+      min-height: 35px;
+      justify-content: space-between;
+    }
+
+    mat-row {
+      min-height: 46px;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    mat-header-cell {
+      justify-content: left;
+      color: var(--grey-6);
+    }
+
+    mat-cell {
+      justify-content: left;
+      margin-bottom: -11px;
+    }
+
+    .metric-keys {
+      display: flex;
+      flex-direction: column;
+      padding: 10px 0;
+      width: 250px;
+      margin-bottom: 7px;
+
+      .dropdown {
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+    }
+
+    .secondary-form {
+      display: flex;
+      flex-direction: column;
+      padding: 10px 0;
+      width: 160px;
+
+      .form-control {
+        margin-top: -13px;
+        margin-bottom: -13px;
+        width: 80%;
+      }
+    }
+
+    .cdk-column-removeMetric {
+      flex: 0 0 60px;
+      width: 60px;
+    }
+
+    .cdk-column-keys {
+      flex: 0 0 250px;
+      width: 250px;
+    }
+
+    .cdk-column-operationType {
+      margin-left: 30px;
+      flex: 0 0 160px;
+      width: 160px;
+    }
+
+    .cdk-column-queryName {
+      width: 100%;
+      max-width: 350px;
+      &.mat-cell {
+        margin-top: -3px;
+      }
+    }
+
+    .remove-icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 1px;
+      min-width: 60px;
+      height: 16px;
+      font-size: var(--text-size-x-large);
+      color: gray;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    .auto-complete {
+      margin-top: -13px;
+      margin-bottom: -13px;
+    }
+
+    mat-form-field {
+      width: 100%;
+      text-align: left;
+    }
+  }
+
+  .add-metric {
+    margin-top: 10px;
+    outline: 0;
+    border: 0;
+    background-color: transparent;
+    color: var(--blue);
+  }
+
+  .title {
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  ::ng-deep .mat-form-field-appearance-legacy .mat-form-field-underline {
+    bottom: unset;
+    background-color: unset !important;
+  }
+
+  ::ng-deep .mat-form-field-appearance-legacy.mat-form-field-invalid:not(.mat-focused) .mat-form-field-ripple {
+    display: none;
+  }
+}

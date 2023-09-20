@@ -1,0 +1,256 @@
+@use '@angular/material' as mat;
+
+@import '@danielmoncada/angular-datetime-picker/assets/style/picker.min.css';
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,700|Material+Icons');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800&display=swap');
+
+// TODO(v15): As of v15 mat.legacy-core no longer includes default typography styles.
+//  The following line adds:
+//    1. Default typography styles for all components
+//    2. Styles for typography hierarchy classes (e.g. .mat-headline-1)
+//  If you specify typography styles for the components you use elsewhere, you should delete this line.
+//  If you don't need the default component typographies but still want the hierarchy styles,
+//  you can delete this line and instead use:
+//    `@include mat.legacy-typography-hierarchy(mat.define-legacy-typography-config());
+@include mat.all-legacy-component-typographies();
+@include mat.legacy-core();
+
+@import './styles/variables.css';
+@import './themes/light-theme';
+@import './themes/dark-theme';
+@import './styles/utility.scss';
+@import './styles/shared-modal.scss';
+@import './app/features/dashboard/dashboard-root/dashboard-root.theme.scss';
+@import './app/features/dashboard/home/root/home.theme.scss';
+@import './app/features/dashboard/home/components/experiment-list/experiment-list.theme.scss';
+@import './app/features/dashboard/home/pages/view-experiment/view-experiment.theme.scss';
+@import './app/features/dashboard/home/components/modal/experiment-status/experiment-status.theme.scss';
+@import './app/features/dashboard/home/components/modal/post-experiment-rule/post-experiment-rule.theme.scss';
+@import './app/features/dashboard/home/components/experiment-design/experiment-design.theme.scss';
+@import './app/features/dashboard/home/components/experiment-design/payloads-table/payloads-table.theme.scss';
+@import './app/features/dashboard/home/components/enrollment-over-time/enrollment-over-time.theme.scss';
+@import './app/features/dashboard/home/components/modal/new-experiment/new-experiment.theme.scss';
+@import './app/features/dashboard/profile/components/profile-info/profile-info.theme.scss';
+@import './app/features/dashboard/profile/components/modals/new-user/new-user.theme.scss';
+@import './app/features/dashboard/experiment-users/components/experiment-users/experiment-users.theme.scss';
+@import './app/features/dashboard/experiment-users/components/preview-user/preview-user.theme.scss';
+@import './app/features/dashboard/logs/common/logs-view.theme.scss';
+@import './app/features/dashboard/common/tabs-view.theme.scss';
+@import './app/features/auth/login/login.theme.scss';
+@import './app/features/dashboard/feature-flags/feature-flags-root/feature-flags-root.theme.scss';
+@import './app/features/dashboard/feature-flags/components/feature-flags-list/feature-flags-list.theme.scss';
+@import './app/features/dashboard/feature-flags/components/modal/new-flag/new-flag.theme.scss';
+@import './app/features/dashboard/feature-flags/components/flag-variations/flag-variations.theme.scss';
+@import './app/features/dashboard/feature-flags/pages/view-feature-flag/view-feature-flag.theme.scss';
+@import './app/features/dashboard/segments/segments-root/segments-root.theme.scss';
+@import './app/features/dashboard/segments/components/segments-list/segments-list.theme.scss';
+@import './app/features/dashboard/segments/components/modal/new-segment/new-segment.theme.scss';
+@import './app/features/dashboard/segments/components/segment-members/segment-members.theme.scss';
+@import './app/features/dashboard/segments/pages/view-segment/view-segment.theme.scss';
+@import './app/features/dashboard/home/components/modal/queries-modal/queries-modal.theme.scss';
+@import './app/shared/components/query-result/query-result.theme.scss';
+@import './app/features/dashboard/profile/components/metrics/metrics.theme.scss';
+@import './app/features/dashboard/home/components/experiment-query-result/experiment-query-result.theme.scss';
+@import './app/features/dashboard/home/components/modal/experiment-end-criteria/experiment-ending-criteria.theme.scss';
+@import './app/features/dashboard/home/components/modal/import-experiment/import-experiment.theme.scss';
+@import './app/features/dashboard/home/components/modal/state-time-logs/state-time-logs.theme.scss';
+@import './app/features/dashboard/segments/components/modal/import-segment/import-segment.theme.scss';
+@import './app/features/dashboard/segments/components/modal/segment-experiment-list/segment-experiment-list.theme.scss';
+
+@mixin custom-components-theme($theme) {
+  @include dashboard-component-theme($theme);
+  @include home-component-theme($theme);
+  @include experiment-list-component-theme($theme);
+  @include view-experiment-component-theme($theme);
+  @include experiment-status-component-theme($theme);
+  @include post-experiment-rule-component-theme($theme);
+  @include experiment-design-component-theme($theme);
+  @include payloads-table-component-theme($theme);
+  @include enrollment-over-time-component-theme($theme);
+  @include new-experiment-component-theme($theme);
+  @include experiment-users-component-theme($theme);
+  @include profile-info-component-theme($theme);
+  @include new-user-component-theme($theme);
+  @include preview-user-component-theme($theme);
+  @include logs-view-component-theme($theme);
+  @include tabs-view-theme($theme);
+  @include login-component-theme($theme);
+  @include feature-flags-root-component-theme($theme);
+  @include feature-flags-list-component-theme($theme);
+  @include new-flag-component-theme($theme);
+  @include flag-variations-component-theme($theme);
+  @include view-segment-component-theme($theme);
+  @include segments-root-component-theme($theme);
+  @include segments-list-component-theme($theme);
+  @include new-segment-component-theme($theme);
+  @include segment-members-component-theme($theme);
+  @include view-feature-flag-component-theme($theme);
+  @include queries-modal-component-theme($theme);
+  @include query-result-component-theme($theme);
+  @include metrics-component-theme($theme);
+  @include experiment-query-result-component-theme($theme);
+  @include experiment-ending-criteria-component-theme($theme);
+  @include import-experiment-component-theme($theme);
+  @include state-time-logs-modal-component-theme($theme);
+  @include import-segment-component-theme($theme);
+  @include segment-experiment-list-modal-component-theme($theme);
+}
+
+.light-theme {
+  @include mat.all-legacy-component-themes($light-theme);
+  @include custom-components-theme($light-theme);
+}
+
+.dark-theme {
+  @include mat.all-legacy-component-themes($dark-theme);
+  @include custom-components-theme($dark-theme);
+}
+
+// TODO material specific style which cannot be changed by scope
+.mat-drawer-inner-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.default-button {
+  background-color: var(--blue) !important;
+  padding: 0 1rem;
+  color: var(--white) !important;
+  font-family: 'Open Sans';
+  font-weight: 600;
+
+  &--disabled {
+    opacity: 0.7;
+    pointer-events: none;
+  }
+}
+
+.delete-modal,
+.import-experiment-modal,
+.import-segment-modal,
+.experiment-general-modal,
+.new-experiment-modal,
+.new-flag-modal,
+.new-segment-modal,
+.new-user-modal,
+.queries-modal,
+.export-modal,
+.query-result,
+.duplicate-segment-modal,
+.experiment-ending-criteria {
+  border-radius: 7px;
+  box-shadow: 0 0 8px 8px rgba(0, 0, 0, 0.12);
+
+  .mat-dialog-container {
+    padding: 0px;
+  }
+}
+
+.segment-experiment-list-modal,
+.state-time-logs-modal {
+  border-radius: 7px;
+
+  .mat-dialog-container {
+    padding: 0px;
+  }
+}
+
+.delete-modal {
+  width: 400px;
+  min-height: 192px;
+
+  .mat-dialog-container {
+    padding: 40px;
+  }
+}
+
+.duplicate-segment-modal {
+  width: 700px;
+  min-height: 192px;
+
+  .mat-dialog-container {
+    padding: 40px;
+  }
+}
+
+.import-segment-modal,
+.import-experiment-modal {
+  width: 500px;
+}
+
+.experiment-general-modal {
+  width: 804px;
+  min-height: 294px;
+}
+
+.experiment-ending-criteria {
+  width: 600px;
+  min-height: 400px;
+}
+
+.segment-experiment-list-modal {
+  width: 700px;
+}
+
+.state-time-logs-modal {
+  width: 400px;
+}
+
+.query-result {
+  width: 600px;
+  min-height: 300px;
+}
+
+.new-experiment-modal {
+  height: 775px;
+  width: 1000px;
+}
+
+.queries-modal {
+  width: 1000px;
+}
+
+.export-modal {
+  width: 700px;
+}
+
+.new-flag-modal {
+  width: 844px;
+}
+
+.new-segment-modal {
+  width: 844px;
+  height: 505px;
+}
+
+.new-user-modal {
+  width: 805px;
+}
+
+.mat-button,
+.mat-flat-button,
+.mat-stroked-button {
+  &.cdk-program-focused .mat-button-focus-overlay {
+    opacity: 0 !important;
+  }
+}
+
+// Material library doesn't expose any params to prevent content truncation for these widgets.
+// Therefore we override the css. If option appears in future, these can go away.
+
+// Added to globally prevent truncation of content dropdowns
+.mat-select-panel-wrap .mat-select-panel {
+  max-width: fit-content;
+}
+
+// Added to globally prevent truncation in tooltips
+.mat-tooltip {
+  word-break: break-all;
+  white-space: normal;
+}
+
+// Added to globally prevent tooltips from blocking click-events
+.mat-tooltip-panel {
+  pointer-events: none;
+}

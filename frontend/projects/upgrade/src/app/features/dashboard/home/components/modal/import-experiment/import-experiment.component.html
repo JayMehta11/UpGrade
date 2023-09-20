@@ -1,0 +1,55 @@
+<div class="import-experiment-container">
+  <span class="ft-24-700 title">{{ 'home.experiment.import-experiment.text' | translate | titlecase }}</span>
+
+  <div class="import-experiment-body">
+    <p class="ft-16-400">
+      {{ 'home.import-experiment.message.text' | translate }}
+    </p>
+    <input accept=".json" type="file" multiple class="ft-14-400 file-input" (change)="uploadFile($event)" />
+
+    <ng-container *ngIf="importFileErrors.length">
+      <mat-table class="table" [dataSource]="importFileErrorsDataSource">
+        <!-- File Name -->
+        <ng-container matColumnDef="File Name">
+          <mat-header-cell class="ft-12-700" *matHeaderCellDef> File Name </mat-header-cell>
+          <mat-cell class="ft-12-600" *matCellDef="let element">
+            {{ element.filename }}
+          </mat-cell>
+        </ng-container>
+
+        <!-- Error -->
+        <ng-container matColumnDef="Error">
+          <mat-header-cell class="ft-12-700" *matHeaderCellDef> Error/Warning </mat-header-cell>
+          <mat-cell class="ft-12-600" *matCellDef="let element">
+            {{ element.error }}
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+      </mat-table>
+
+      <span class="warn-msg">
+        {{ 'home.import-experiment.multiple-files-import.warning.message.text' | translate }}
+      </span>
+    </ng-container>
+  </div>
+
+  <div class="button-container">
+    <button class="shared-modal--modal-btn" mat-raised-button (click)="onCancelClick()">
+      {{ 'global.cancel.text' | translate }}
+    </button>
+    <button
+      mat-raised-button
+      class="shared-modal--modal-btn default-button"
+      [ngClass]="{
+        'default-button--disabled':
+          uploadedFileCount === 0 || (uploadedFileCount === 1 && (!experimentInfo || !isExperimentJSONValid))
+      }"
+      [disabled]="uploadedFileCount === 0 || (uploadedFileCount === 1 && (!experimentInfo || !isExperimentJSONValid))"
+      (click)="importExperiment()"
+    >
+      {{ 'global.import.text' | translate }}
+    </button>
+  </div>
+</div>

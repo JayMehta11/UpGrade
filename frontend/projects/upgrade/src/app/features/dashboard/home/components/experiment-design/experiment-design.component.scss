@@ -1,0 +1,170 @@
+.simple-experiment-form {
+  .simple-experiment-decision-point-conditions-view {
+    height: 515px;
+    overflow-y: auto;
+
+    .title {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .decision-point-header-container {
+      display: flex;
+      justify-content: space-between;
+
+      .toggle-button {
+        margin-top: -5px;
+        .icon-bump-left {
+          margin-left: -5px;
+        }
+        .toggle-text {
+          margin-left: 5px;
+        }
+      }
+    }
+
+    .conditions-header-container {
+      margin-top: 10px;
+    }
+
+    .condition-table,
+    .decision-point-table {
+      max-height: 135px;
+      overflow: auto;
+
+      mat-header-row {
+        min-height: 35px;
+        justify-content: space-between;
+      }
+
+      mat-row {
+        min-height: 46px;
+        max-height: 46px;
+        justify-content: space-between;
+      }
+
+      mat-header-cell {
+        justify-content: left;
+        color: var(--grey-6);
+      }
+
+      mat-cell {
+        justify-content: left;
+        margin-bottom: -5px;
+      }
+
+      .cdk-column-site {
+        width: 100%;
+      }
+
+      .cdk-column-target {
+        margin-left: 30px;
+        width: 100%;
+      }
+
+      .cdk-column-excludeIfReached {
+        margin-left: 30px;
+        width: 100%;
+        max-width: 150px;
+        justify-content: center;
+
+        mat-checkbox {
+          margin-top: -5px;
+        }
+      }
+
+      .cdk-column-conditionCode {
+        width: 100%;
+      }
+
+      .cdk-column-assignmentWeight {
+        margin-left: 30px;
+        width: 100%;
+        max-width: 90px;
+      }
+
+      .assignment-weight-readonly {
+        width: 90px;
+      }
+
+      .cdk-column-description {
+        margin-left: 30px;
+        width: 100%;
+      }
+
+      .cdk-column-actions {
+        margin-left: 30px;
+        flex: 0 0 78px;
+        width: 78px;
+
+        .row-action-btn {
+          border: none;
+          background-color: transparent;
+
+          .icon {
+            margin-top: -5px;
+            margin-left: -3px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: var(--text-size-x-large);
+            color: gray;
+          }
+        }
+      }
+
+      mat-form-field {
+        width: 100%;
+        text-align: left;
+      }
+
+      .align-right {
+        text-align: right;
+      }
+
+      .row-is-locked {
+        opacity: 0.4;
+      }
+    }
+
+    .add-condition,
+    .add-decision-point {
+      margin-top: 10px;
+      outline: 0;
+      border: 0;
+      background-color: transparent;
+      color: var(--blue);
+      &--disabled {
+        color: var(--light-blue);
+      }
+    }
+  }
+
+  .validation-container {
+    min-height: 30px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+  }
+
+  // This rule is pretty invasive, we should reconsider how and why we are refusing underlines
+
+  // ::ng-deep .mat-form-field-appearance-legacy .mat-form-field-underline {
+  //   bottom: unset;
+  //   background-color: unset !important;
+  // }
+
+  ::ng-deep .mat-form-field-appearance-legacy.mat-form-field-invalid:not(.mat-focused) .mat-form-field-ripple {
+    display: none;
+  }
+
+  /* Remove arrows/spinners from input type number */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+}

@@ -1,0 +1,19 @@
+@use '@angular/material' as mat;
+
+@mixin preview-user-component-theme($theme) {
+  $foreground: map-get($theme, foreground);
+
+  .preview-users {
+    .preview-user-container {
+      table {
+        .action-icon {
+          color: mat.get-color-from-palette($foreground, icon);
+
+          &--small {
+            color: mat.get-color-from-palette($foreground, icon);
+          }
+        }
+      }
+    }
+  }
+}

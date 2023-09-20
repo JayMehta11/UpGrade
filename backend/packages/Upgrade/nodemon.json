@@ -1,0 +1,7 @@
+{
+  "delay": "500",
+  "ignore": ["test", "commands", "src/database"],
+  "watch": ["src/**/*.ts", ".env"],
+  "ext": "ts",
+  "exec": "ts-node -r tsconfig-paths/register ./src/app.ts"
+}
