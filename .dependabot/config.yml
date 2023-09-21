@@ -1,0 +1,9 @@
+version: 1
+update_configs: []
+updates:
+  - package-ecosystem: "maven"
+    directory: "/clientlibs/java"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 10
+    automerged: true
