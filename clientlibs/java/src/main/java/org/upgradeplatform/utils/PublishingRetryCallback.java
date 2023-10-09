@@ -35,7 +35,11 @@ public class PublishingRetryCallback<T> implements InvocationCallback<Response> 
 
 	@Override
 	public void completed(Response response) {
-		if (SUCCESSFUL.equals(response.getStatusInfo().getFamily()) || retries <= 0) {
+    int responseStatusCode = response.getStatusInfo().getStatusCode();
+    boolean isResponseClientRequestError = responseStatusCode >= 400 && responseStatusCode < 500;
+
+    System.out.println("Response in completed: " + response);
+		if (SUCCESSFUL.equals(response.getStatusInfo().getFamily()) || retries <= 0 || isResponseClientRequestError) {
 			callback.completed(response);
 		} else {
 			retry();
