@@ -8,26 +8,48 @@ import deleteExperiment
 
 schools = {}
 students = {}
-allExperimentPartitionIDConditionPair = []
+# allExperimentPartitionIDConditionPair = []
 # For load testing on existing prod experiments:
-# allExperimentPartitionIDConditionPair = [
-#     {"experimentPoint": "SelectAdaptive", "partitionId" : "1_0gzegepj", "condition" : "human-robert-control"},
-#     {"experimentPoint": "SelectAdaptive", "partitionId" : "1_ffi961t9", "condition" : "human-robert-control"},
-#     {"experimentPoint": "SelectAdaptive", "partitionId" : "1_m7qve72i", "condition" : "joke-ai-robert-experimental"},
-#     {"experimentPoint": "SelectAdaptive", "partitionId" : "1_2ee7ws2b", "condition" : "joke-ai-robert-experimental"},
-#     {"experimentPoint": "SelectAdaptive", "partitionId" : "1_i7i7heqa", "condition" : "control-playback-speed"},
-#     {"experimentPoint": "SelectAdaptive", "partitionId" : "1_yspx09fg", "condition" : "control-playback-speed"},
-#     {"experimentPoint": "SelectAdaptive", "partitionId" : "1_fwk036l9", "condition" : "control-playback-speed"},
-#     {"experimentPoint": "DisplayQuestion", "partitionId" : "AR-VST-0150-6.NS.8-1_SP_014", "condition" : "learnosity-item-control"},
-#     {"experimentPoint": "DisplayQuestion", "partitionId" : "AR-VST-0150-6.NS.8-1_SP_008", "condition" : "learnosity-item-control"},
-#     {"experimentPoint": "DisplayQuestion", "partitionId" : "AR-VST-0150-6.NS.8-1_SP_004", "condition" : "learnosity-item-control"},
-#     {"experimentPoint": "SelectStream", "partitionId" : "HintUI", "condition" : "question-hint-tutorbot"},
-#     {"experimentPoint": "SelectStream", "partitionId" : "rewindButton", "condition" : "enable-rewind-button"}
-# ]
+allExperimentPartitionIDConditionPair = [
+
+    {"site": "SelectSection", "target" : "worksheet_grapher_a1_direct_variation", "condition" : "control"},
+    {"site": "SelectSection", "target" : "worksheet_grapher_a1_lin_mod_mult_rep", "condition" : "control"},
+    {"site": "SelectSection", "target" : "worksheet_grapher_a1_slope_intercept_decimal", "condition" : "control"},
+    {"site": "SelectSection", "target" : "worksheet_grapher_a1_slope_intercept_integer", "condition" : "control"},
+    {"site": "SelectSection", "target" : "worksheet_grapher_a1_patterns_1step_eqn_ops", "condition" : "control"},
+    {"site": "SelectSection", "target" : "worksheet_grapher_a1_patterns_2step_expr", "condition" : "control"},
+    {"site": "SelectSection", "target" : "worksheet_grapher_a1_linear_systems_dec", "condition" : "control"},
+    {"site": "SelectSection", "target" : "worksheet_grapher_a1_linear_systems_int", "condition" : "control"},
+    {"site": "SelectSection", "target" : "worksheet_grapher_a1_solving_2step_int", "condition" : "control"},
+    {"site": "SelectSection", "target" : "worksheet_grapher_a1_solving_2step_dec_frac", "condition" : "control"},
+    {"site": "SelectSection", "target" : "worksheet_grapher_a1_mod_initial_plus_point", "condition" : "control"},
+    {"site": "SelectSection", "target" : "worksheet_grapher_a1_mod_two_points", "condition" : "control"},
+    {"site": "SelectSection", "target" : "worksheet_grapher_a1_mod_init_point", "condition" : "control"},
+    {"site": "SelectSection", "target" : "worksheet_grapher_a1_four_quadrant_graphing_1step", "condition" : "control"},
+    {"site": "SelectSection", "target" : "worksheet_grapher_a1_linear_models_distrib_div", "condition" : "control"},
+    {"site": "SelectSection", "target" : "worksheet_grapher_a1_linear_models_distrib_frac", "condition" : "control"},
+    {"site": "SelectSection", "target" : "worksheet_grapher_a1_solving_1step_int", "condition" : "control"},
+    {"site": "SelectSection", "target" : "worksheet_grapher_a1_solving_1step_dec", "condition" : "control"},
+    {"site": "SelectSection", "target" : "linear_relations_1", "condition" : "control"},
+    {"site": "SelectSection", "target" : "data_displays_comparing_populations", "condition" : "control"},
+    {"site": "SelectSection", "target" : "data_displays_comparing_data_sets_using_center_and_spread", "condition" : "control"},
+    {"site": "SelectSection", "target" : "direct_variation_equation", "condition" : "control"},
+    {"site": "SelectSection", "target" : "direct_variation_convert", "condition" : "control"},
+    {"site": "SelectSection", "target" : "volume_surface_area_right_prism_vol", "condition" : "control"},
+    {"site": "SelectSection", "target" : "volume_surface_area_right_prism_vol-_backward", "condition" : "control"},
+    {"site": "SelectSection", "target" : "volume_surface_area_sq_pyramid_vol", "condition" : "control"},
+    {"site": "SelectSection", "target" : "factor_trees_lcm_gcf", "condition" : "control"},
+    {"site": "SelectSection", "target" : "factor_trees_prime_factorization", "condition" : "control"},
+    {"site": "SelectSection", "target" : "geo_transforms_tr", "condition" : "control"},
+    {"site": "SelectSection", "target" : "geo_transforms_re", "condition" : "control"},
+    {"site": "SelectSection", "target" : "geo_transforms_ro", "condition" : "control"},
+    {"site": "SelectSection", "target" : "graphs_of_functions-1", "condition" : "control"},
+    {"site": "SelectSection", "target" : "solving_angle_measures", "condition" : "control"},
+]
 
 # Setting host URL's:
-protocol = "http"
-host = "localhost:3030"
+protocol = "https"
+host = "upgradeapi.qa-cli.com"
 
 # clear existing experiments:
 option = int(input("Enter 1 for delete a single random experiment and 2 to delete all experiments, else Enter 0 for not deleting any experiment: "))
@@ -212,7 +234,7 @@ class UpgradeUserTask(SequentialTaskSet):
         workingSchoolId = random.choice(list(self.student["schools"].keys()))
         workingClassId = random.choice(list(self.student["schools"][workingSchoolId]["classes"].keys()))
         workingInstructorId = self.student["schools"][workingSchoolId]["classes"][workingClassId]["instructorId"]
-        url = protocol + f"://{host}/api/workinggroup"
+        url = protocol + f"://{host}/api/v1/workinggroup"
         print("/workinggroup for userid: " + self.student["studentId"])
         data = {
             "id": self.student["studentId"],
@@ -222,7 +244,7 @@ class UpgradeUserTask(SequentialTaskSet):
                 "instructorId": workingInstructorId
             }
         }
-        with self.client.post(url, json = data, catch_response = True) as response:
+        with self.client.patch(url, json = data, catch_response = True) as response:
             if response.status_code != 200:
                 print(f"setWorkingGroup Failed with {response.status_code} for userid: " + self.student["studentId"])
     # Task 5: launcher calls /useraliases
@@ -232,13 +254,13 @@ class UpgradeUserTask(SequentialTaskSet):
         workingSchoolId = random.choice(list(self.student["schools"].keys()))
         workingClassId = random.choice(list(self.student["schools"][workingSchoolId]["classes"].keys()))
         classModules = self.student["schools"][workingSchoolId]["classes"][workingClassId]["classModules"]
-        url = protocol + f"://{host}/api/useraliases"
+        url = protocol + f"://{host}/api/v1/useraliases"
         print("/useraliases for userid: " + self.student["studentId"])
         data = {
             "userId": self.student["studentId"],
             "aliases": [self.student["studentId"] + m for m in classModules]
         }
-        with self.client.post(url, json = data, catch_response = True) as response:
+        with self.client.patch(url, json = data, catch_response = True) as response:
             if response.status_code != 200:
                 print(f"/useraliases Failed with {response.status_code} for userid: " + self.student["studentId"])
     #Assignment Progress Service
@@ -247,11 +269,11 @@ class UpgradeUserTask(SequentialTaskSet):
     @tag("assign-prog")
     @task
     def getAllExperimentConditionsAssignProg(self):
-        url = protocol + f"://{host}/api/assign"
+        url = protocol + f"://{host}/api/v1/assign"
         print("/assign assign-prog for userid: " + self.student["studentId"])
         data = {
             "userId": self.student["studentId"],
-            "context": "mathstream"
+            "context": "assign-prog"
         }
         with self.client.post(url, json = data, catch_response = True) as response:
             if response.status_code != 200:
@@ -261,7 +283,7 @@ class UpgradeUserTask(SequentialTaskSet):
     @tag("assign-prog")
     @task
     def markExperimentPoint(self):
-        url = protocol + f"://{host}/api/mark"
+        url = protocol + f"://{host}/api/v1/mark"
         print("/mark for userid: " + self.student["studentId"])
         if(len(allExperimentPartitionIDConditionPair) == 0):
             print("No assigned conditions found")
@@ -272,8 +294,10 @@ class UpgradeUserTask(SequentialTaskSet):
         markPartitionIDConditionPair = random.choice(allExperimentPartitionIDConditionPair)
         data = {
             "userId": self.student["studentId"],
-            "experimentPoint": markPartitionIDConditionPair['site'],
-            "partitionId": markPartitionIDConditionPair['target'],
+            # "experimentPoint": markPartitionIDConditionPair['experimentPoint'],
+            # "partitionId": markPartitionIDConditionPair['partitionId'],
+            "site": markPartitionIDConditionPair['site'],
+            "target": markPartitionIDConditionPair['target'],
             "condition": markPartitionIDConditionPair['condition']
         }
 
@@ -291,35 +315,38 @@ class UpgradeUserTask(SequentialTaskSet):
     # Task 8: failed experiment point
     @tag("assign-prog")
     @task
-    def failedExperimentPoint(self):
-        url = protocol + f"://{host}/api/failed"
-        print("/failed for userid: " + self.student["studentId"])
-        if(len(allExperimentPartitionIDConditionPair) == 0):
-            print("No assigned conditions found")
-            return
-        else:
-            print("allExperimentPartitionIDConditionPair: ", allExperimentPartitionIDConditionPair)
-        # pick a random pair of PartitionIdConditionId from allExperimentPartitionIDConditionPair
-        markPartitionIDConditionPair = random.choice(allExperimentPartitionIDConditionPair)
+    # def failedExperimentPoint(self):
+    #     url = protocol + f"://{host}/api/failed"
+    #     print("/failed for userid: " + self.student["studentId"])
 
-        data = {
-            "userId": self.student["studentId"],
-            "experimentPoint": markPartitionIDConditionPair['site'],
-            "partitionId": markPartitionIDConditionPair['target'],
-            "condition": markPartitionIDConditionPair['condition']
-        }
+    #     if(len(allExperimentPartitionIDConditionPair) == 0):
+    #         print("No assigned conditions found")
+    #         return
+    #     else:
+    #         print("allExperimentPartitionIDConditionPair: ", allExperimentPartitionIDConditionPair)
+    #     # pick a random pair of PartitionIdConditionId from allExperimentPartitionIDConditionPair
+    #     markPartitionIDConditionPair = random.choice(allExperimentPartitionIDConditionPair)
 
-        # pick a random assigned workspace - requires /assign response to be saved
-        # markPartitionIDConditionPair = random.choice(self.assignedWorkspaces)
-        # data = {
-        #     "reason": "locust tests",
-        #     "experimentPoint": markPartitionIDConditionPair['expPoint'],
-        #     "userId": self.student["studentId"],
-        #     "experimentId": markPartitionIDConditionPair['expId']
-        # }
-        with self.client.post(url, json = data, catch_response = True) as response:
-            if response.status_code != 200:
-                print(f"/failed Failed with {response.status_code} for userid: " + self.student["studentId"])
+    #     data = {
+    #         "userId": self.student["studentId"],
+    #         "experimentPoint": markPartitionIDConditionPair['experimentPoint'],
+    #         "partitionId": markPartitionIDConditionPair['partitionId'],
+    #         # "experimentPoint": markPartitionIDConditionPair['site'],
+    #         # "partitionId": markPartitionIDConditionPair['target'],
+    #         "condition": markPartitionIDConditionPair['condition']
+    #     }
+
+    #     # pick a random assigned workspace - requires /assign response to be saved
+    #     # markPartitionIDConditionPair = random.choice(self.assignedWorkspaces)
+    #     # data = {
+    #     #     "reason": "locust tests",
+    #     #     "experimentPoint": markPartitionIDConditionPair['expPoint'],
+    #     #     "userId": self.student["studentId"],
+    #     #     "experimentId": markPartitionIDConditionPair['expId']
+    #     # }
+    #     with self.client.post(url, json = data, catch_response = True) as response:
+    #         if response.status_code != 200:
+    #             print(f"/failed Failed with {response.status_code} for userid: " + self.student["studentId"])
     # Generate mock log data 
     def genMockLog(self):
         attributes = {
@@ -368,5 +395,5 @@ class UpgradeUserTask(SequentialTaskSet):
                 print(f"LogEvent Failed with {response.status_code}")
 class UpgradeUser(HttpUser):
     wait_time = between(0.1, 10)
-    host = "localhost:3030"
+    host = "https://upgradeapi.qa-cli.com"
     tasks = [UpgradeUserTask]
