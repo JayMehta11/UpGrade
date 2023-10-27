@@ -426,6 +426,10 @@ export class ExperimentAssignmentService {
     context: string,
     requestContext: { logger: UpgradeLogger; userDoc: any }
   ): Promise<IExperimentAssignmentv5[]> {
+    const firstTimestamp = Date.now();
+    console.log(`${Date.now()}: ${0} start getAllExperimentConditions. [test_test_${userId}]`);
+    let lastTimestamp = Date.now();
+
     const { logger, userDoc } = requestContext;
     logger.info({ message: `getAllExperimentConditions: User: ${userId}` });
 
@@ -433,6 +437,13 @@ export class ExperimentAssignmentService {
       this.previewUserService.findOne(userId, logger),
       this.experimentUserService.getOriginalUserDoc(userId, logger),
     ]);
+
+    console.log(
+      `${Date.now()}: ${
+        Date.now() - lastTimestamp
+      } after previewUserService.findOne and experimentUserService.getOriginalUserDoc [test_test_${userId}]`
+    );
+    lastTimestamp = Date.now();
 
     // throw error if user not defined
     if (!experimentUserDoc || !experimentUserDoc.id) {
@@ -472,7 +483,15 @@ export class ExperimentAssignmentService {
         this.checkUserOrGroupIsGloballyExcluded(experimentUser),
       ]);
     }
+    console.log(
+      `${Date.now()}: ${Date.now() - lastTimestamp} after getValidExperiments and checkUserOrGroupIsGloballyExcluded [test_test_${userId}]`
+    );
+    lastTimestamp = Date.now();
+
     experiments = experiments.map((exp) => this.experimentService.formatingConditionPayload(exp));
+
+    console.log(`${Date.now()}: ${Date.now() - lastTimestamp} after formatingConditionPayload [test_test_${userId}]`);
+    lastTimestamp = Date.now();
 
     // Experiment has assignment type as GROUP_ASSIGNMENT
     const groupExperiments = experiments.filter(({ assignmentUnit }) => assignmentUnit === ASSIGNMENT_UNIT.GROUP);
@@ -548,6 +567,13 @@ export class ExperimentAssignmentService {
           : Promise.resolve([] as GroupExclusion[]),
       ]);
 
+      console.log(
+        `${Date.now()}: ${
+          Date.now() - lastTimestamp
+        } after individualEnrollments, groupEnrollments, individualExclusions, groupExclusions [test_test_${userId}]`
+      );
+      lastTimestamp = Date.now();
+
       let mergedIndividualAssignment = individualEnrollments;
       // add assignments for individual assignments if preview user
       if (previewUser && previewUser.assignments) {
@@ -567,12 +593,18 @@ export class ExperimentAssignmentService {
         experimentUser
       );
 
+      console.log(`${Date.now()}: ${Date.now() - lastTimestamp} after experimentLevelExclusionInclusion [test_test_${userId}]`);
+      lastTimestamp = Date.now();
+
       // Create experiment pool
       const experimentPools = this.createExperimentPool(filteredExperiments);
       // console.log(
       //   'experimentPools',
       //   experimentPools.map((exp) => exp.map(({ id }) => id))
       // );
+
+      console.log(`${Date.now()}: ${Date.now() - lastTimestamp} after createExperimentPool [test_test_${userId}]`);
+      lastTimestamp = Date.now();
 
       // filter pools which are not assigned
       const unassignedPools = experimentPools.filter((pool) => {
@@ -589,6 +621,9 @@ export class ExperimentAssignmentService {
           return individualEnrollment || groupEnrollment ? true : false;
         });
       });
+
+      console.log(`${Date.now()}: ${Date.now() - lastTimestamp} after unassignedPools [test_test_${userId}]`);
+      lastTimestamp = Date.now();
 
       // Assign experiments inside the pools
       const random = seedrandom(userId)();
@@ -614,6 +649,11 @@ export class ExperimentAssignmentService {
       });
 
       filteredExperiments = alreadyAssignedExperiment.flat().concat(filteredExperiments);
+
+      console.log(
+        `${Date.now()}: ${Date.now() - lastTimestamp} after alreadyAssignedExperiment and filteredExperiments [test_test_${userId}]`
+      );
+      lastTimestamp = Date.now();
 
       // assign remaining experiment
       const experimentAssignment = await Promise.all(
@@ -650,6 +690,10 @@ export class ExperimentAssignmentService {
           );
         })
       );
+
+      console.log(`${Date.now()}: ${Date.now() - lastTimestamp} after createExperimentPool [test_test_${userId}]`);
+      lastTimestamp = Date.now();
+
       let monitoredLogCounts = [];
       if (filteredExperiments.some((e) => e.assignmentUnit === ASSIGNMENT_UNIT.WITHIN_SUBJECTS)) {
         const allWithinSubjectsSites = [];
@@ -730,6 +774,11 @@ export class ExperimentAssignmentService {
             };
           }
         });
+
+        console.log(`${Date.now()}: ${Date.now() - lastTimestamp} after decisionPoints in reduce [test_test_${userId}]`);
+        lastTimestamp = Date.now();
+        console.log(`total: ${Date.now() - firstTimestamp} [test_test_${userId}]`);
+
         return assignment ? [...accumulator, ...decisionPoints] : accumulator;
       }, []);
     } catch (err) {

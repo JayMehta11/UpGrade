@@ -1467,7 +1467,6 @@ export class ExperimentService {
   }
 
   public formatingConditionPayload(experiment: Experiment): Experiment {
-    let count = 0;
     if (experiment.type === EXPERIMENT_TYPE.FACTORIAL) {
       const conditionPayload: ConditionPayload[] = [];
       experiment.conditions.forEach((condition) => {
@@ -1483,25 +1482,19 @@ export class ExperimentService {
 
     const { conditions, partitions } = experiment;
 
-    console.log('conditions:', conditions.length);
-    console.log('partitions:', partitions.length);
-
     const conditionPayload: ConditionPayload[] = [];
     partitions.forEach((partition) => {
-      console.log({ partition });
+
       const conditionPayloadData = partition.conditionPayloads;
-      console.log('in partition:');
-      console.log(conditionPayloadData.length);
+
       delete partition.conditionPayloads;
 
       conditionPayloadData.forEach((x) => {
         if (x && conditions.filter((con) => con.id === x.parentCondition.id).length > 0) {
           conditionPayload.push({ ...x, decisionPoint: partition });
         }
-        count++;
       });
     });
-    console.log(`we looped ${count} times`);
     return { ...experiment, conditionPayloads: conditionPayload };
   }
 
