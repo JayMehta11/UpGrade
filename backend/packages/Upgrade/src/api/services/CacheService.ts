@@ -14,7 +14,8 @@ export class CacheService {
     } else {
       store = 'none';
     }
-    this.memoryCache = cacheManager.caching({ store, max: 100, ttl: 1 });
+    console.log('ttl', env.caching.ttl)
+    this.memoryCache = cacheManager.caching({ store, max: 100, ttl: env.caching.ttl });
   }
 
   public setCache<T>(id: string, value: T): Promise<T> {
