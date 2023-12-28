@@ -1,9 +1,10 @@
-import { Repository, EntityRepository, EntityManager } from 'typeorm';
+import { Repository, EntityManager } from 'typeorm';
 import repositoryError from './utils/repositoryError';
 import { UpgradeLogger } from 'src/lib/logger/UpgradeLogger';
 import { Factor } from '../models/Factor';
+import { InjectRepository } from 'typeorm-typedi-extensions';
 
-@EntityRepository(Factor)
+@InjectRepository(Factor)
 export class FactorRepository extends Repository<Factor> {
   public async getAllFactor(logger: UpgradeLogger): Promise<Factor[]> {
     return await this.createQueryBuilder('factor')

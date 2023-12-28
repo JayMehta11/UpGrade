@@ -1,8 +1,9 @@
-import { Repository, EntityRepository, EntityManager } from 'typeorm';
+import { Repository, EntityManager } from 'typeorm';
 import { ScheduledJob } from '../models/ScheduledJob';
 import repositoryError from './utils/repositoryError';
+import { InjectRepository } from 'typeorm-typedi-extensions';
 
-@EntityRepository(ScheduledJob)
+@InjectRepository(ScheduledJob)
 export class ScheduledJobRepository extends Repository<ScheduledJob> {
   public async upsertScheduledJob(
     scheduledJob: Partial<ScheduledJob>,

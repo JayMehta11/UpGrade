@@ -1,8 +1,9 @@
-import { EntityRepository, EntityManager, Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { MonitoredDecisionPoint } from '../models/MonitoredDecisionPoint';
 import repositoryError from './utils/repositoryError';
+import { InjectRepository } from 'typeorm-typedi-extensions';
 
-@EntityRepository(MonitoredDecisionPoint)
+@InjectRepository(MonitoredDecisionPoint)
 export class MonitoredDecisionPointRepository extends Repository<MonitoredDecisionPoint> {
   public async saveRawJson(
     rawData: Omit<MonitoredDecisionPoint, 'createdAt' | 'updatedAt' | 'versionNumber' | 'monitoredPointLogs'>

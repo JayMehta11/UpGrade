@@ -1,9 +1,7 @@
 import { MonitoredDecisionPoint } from './../models/MonitoredDecisionPoint';
 import { Experiment } from '../models/Experiment';
-import { IndividualExclusionRepository } from './IndividualExclusionRepository';
 import { IndividualEnrollmentRepository } from './IndividualEnrollmentRepository';
-import { EntityRepository, EntityManager, getCustomRepository } from 'typeorm';
-import { ExperimentRepository } from './ExperimentRepository';
+import { EntityManager, Repository } from 'typeorm';
 import { PreviewUser } from '../models/PreviewUser';
 import {
   DATE_RANGE,
@@ -13,10 +11,13 @@ import {
 } from 'upgrade_types';
 import { GroupEnrollmentRepository } from './GroupEnrollmentRepository';
 import { GroupEnrollment } from '../models/GroupEnrollment';
-import { GroupExclusionRepository } from './GroupExclusionRepository';
 import { DecisionPoint } from '../models/DecisionPoint';
 import { MonitoredDecisionPointLog } from '../models/MonitoredDecisionPointLog';
 import { ExperimentCondition } from '../models/ExperimentCondition';
+import { InjectRepository } from 'typeorm-typedi-extensions';
+import { IndividualEnrollment } from '../models/IndividualEnrollment';
+import { IndividualExclusion } from '../models/IndividualExclusion';
+import { GroupExclusion } from '../models/GroupExclusion';
 
 export interface IEnrollmentByCondition {
   conditions_id: string;
@@ -62,12 +63,16 @@ export interface CSVExportDataRow {
   target: string;
 }
 
-@EntityRepository()
+@InjectRepository()
 export class AnalyticsRepository {
-  constructor(private manager: EntityManager) {}
+  constructor(
+    @InjectRepository(IndividualEnrollment)
+    private individualEnrollmentRepository: Repository<IndividualEnrollment>,
+    private manager: EntityManager
+  ) {}
 
   public async getEnrollmentCountPerGroup(experimentId: string): Promise<Array<{ groupId: string; count: number }>> {
-    const individualEnrollmentRepository = this.manager.getCustomRepository(IndividualEnrollmentRepository);
+    const individualEnrollmentRepository = this.manager.getRepository(IndividualEnrollmentRepository);
     return individualEnrollmentRepository
       .createQueryBuilder('individualEnrollment')
       .select([
@@ -81,14 +86,17 @@ export class AnalyticsRepository {
   }
 
   public async getEnrollmentPerPartitionCondition(experimentId: string): Promise<IExperimentEnrollmentDetailStats> {
-    const experimentRepository = this.manager.getCustomRepository(ExperimentRepository);
-    const individualEnrollmentRepository = this.manager.getCustomRepository(IndividualEnrollmentRepository);
-    const individualExclusionRepository = this.manager.getCustomRepository(IndividualExclusionRepository);
+    const experimentRepository = this.manager.getRepository(Experiment);
+    const individualEnrollmentRepository = this.manager.getRepository(IndividualEnrollment);
+    const individualExclusionRepository = this.manager.getRepository(IndividualExclusion);
     // const groupEnrollmentRepository = this.manager.getCustomRepository(GroupEnrollmentRepository);
-    const groupExclusionRepository = this.manager.getCustomRepository(GroupExclusionRepository);
+    const groupExclusionRepository = this.manager.getRepository(GroupExclusion);
 
     // find experiment data
-    const experiment = await experimentRepository.findOne(experimentId, { relations: ['partitions', 'conditions'] });
+    const experiment = await experimentRepository.findOne({
+      where: { id: experimentId },
+      relations: ['partitions', 'conditions'],
+    });
 
     if (experiment && experiment.assignmentUnit === ASSIGNMENT_UNIT.INDIVIDUAL) {
       const [includedUser, usersPerCondition, perConditionDecisionPoint, excludedUser]: [
@@ -403,8 +411,8 @@ export class AnalyticsRepository {
     skip: number,
     take: number
   ): Promise<CSVExportDataRow[]> {
-    const individualEnrollmentRepository = getCustomRepository(IndividualEnrollmentRepository, 'export');
-    return individualEnrollmentRepository
+    // const individualEnrollmentRepository = getRepository(IndividualEnrollment);
+    return this.individualEnrollmentRepository
       .createQueryBuilder('individualEnrollment')
       .select([
         'experiment.id as "experimentId"',
@@ -450,8 +458,8 @@ export class AnalyticsRepository {
     skip: number,
     take: number
   ): Promise<CSVExportDataRow[]> {
-    const individualEnrollmentRepository = getCustomRepository(IndividualEnrollmentRepository, 'export');
-    return individualEnrollmentRepository
+    // const individualEnrollmentRepository = getRepository(IndividualEnrollment);
+    return this.individualEnrollmentRepository
       .createQueryBuilder('individualEnrollment')
       .select([
         'experiment.id as "experimentId"',
@@ -497,9 +505,9 @@ export class AnalyticsRepository {
     dateRange: DATE_RANGE,
     clientOffset: number
   ): Promise<[IEnrollmentConditionAndPartitionDate[], IEnrollmentConditionAndPartitionDate[]]> {
-    const experimentRepository = this.manager.getCustomRepository(ExperimentRepository);
-    const individualEnrollmentRepository = this.manager.getCustomRepository(IndividualEnrollmentRepository);
-    const groupEnrollmentRepository = this.manager.getCustomRepository(GroupEnrollmentRepository);
+    const experimentRepository = this.manager.getRepository(Experiment);
+    const individualEnrollmentRepository = this.manager.getRepository(IndividualEnrollment);
+    const groupEnrollmentRepository = this.manager.getRepository(GroupEnrollment);
 
     const groupByRange = `date_range`;
     const { whereDate: individualWhereDate, selectRange: individualSelectRange } = this.getDateVariables(
@@ -508,7 +516,7 @@ export class AnalyticsRepository {
       'individualEnrollment'
     );
 
-    const experiment = await experimentRepository.findOne(experimentId);
+    const experiment = await experimentRepository.findOneBy({ id: experimentId });
     let individualEnrollmentConditionAndDecisionPoint: Promise<any>;
     if (experiment && experiment.assignmentUnit === ASSIGNMENT_UNIT.WITHIN_SUBJECTS) {
       individualEnrollmentConditionAndDecisionPoint = individualEnrollmentRepository

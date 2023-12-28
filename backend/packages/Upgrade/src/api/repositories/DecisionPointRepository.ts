@@ -1,8 +1,9 @@
 import { DecisionPoint } from '../models/DecisionPoint';
-import { Repository, EntityRepository, EntityManager } from 'typeorm';
+import { Repository, EntityManager } from 'typeorm';
 import repositoryError from './utils/repositoryError';
+import { InjectRepository } from 'typeorm-typedi-extensions';
 
-@EntityRepository(DecisionPoint)
+@InjectRepository(DecisionPoint)
 export class DecisionPointRepository extends Repository<DecisionPoint> {
   public async upsertDecisionPoint(
     decisionPointDoc: Partial<DecisionPoint>,

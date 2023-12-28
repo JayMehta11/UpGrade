@@ -1,8 +1,9 @@
-import { Repository, EntityRepository, EntityManager } from 'typeorm';
+import { Repository, EntityManager } from 'typeorm';
 import { FeatureFlag } from '../models/FeatureFlag';
 import repositoryError from './utils/repositoryError';
+import { InjectRepository } from 'typeorm-typedi-extensions';
 
-@EntityRepository(FeatureFlag)
+@InjectRepository(FeatureFlag)
 export class FeatureFlagRepository extends Repository<FeatureFlag> {
   public async insertFeatureFlag(flagDoc: FeatureFlag, entityManager: EntityManager): Promise<FeatureFlag> {
     const result = await entityManager

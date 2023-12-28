@@ -1,5 +1,6 @@
+import { InjectRepository } from 'typeorm-typedi-extensions';
 import { Setting } from '../models/Setting';
-import { EntityRepository, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
-@EntityRepository(Setting)
+@InjectRepository(Setting)
 export class SettingRepository extends Repository<Setting> {}

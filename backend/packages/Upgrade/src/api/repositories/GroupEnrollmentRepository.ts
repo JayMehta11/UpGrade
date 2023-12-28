@@ -1,7 +1,8 @@
-import { EntityRepository, In, Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { GroupEnrollment } from '../models/GroupEnrollment';
+import { InjectRepository } from 'typeorm-typedi-extensions';
 
-@EntityRepository(GroupEnrollment)
+@InjectRepository(GroupEnrollment)
 export class GroupEnrollmentRepository extends Repository<GroupEnrollment> {
   public findEnrollments(groupIds: string[], experimentIds: string[]): Promise<GroupEnrollment[]> {
     return this.find({

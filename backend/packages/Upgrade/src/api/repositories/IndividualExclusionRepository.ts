@@ -1,8 +1,9 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { IndividualExclusion } from '../models/IndividualExclusion';
 import repositoryError from './utils/repositoryError';
+import { InjectRepository } from 'typeorm-typedi-extensions';
 
-@EntityRepository(IndividualExclusion)
+@InjectRepository(IndividualExclusion)
 export class IndividualExclusionRepository extends Repository<IndividualExclusion> {
   public async saveRawJson(
     rawDataArray: Array<Omit<IndividualExclusion, 'createdAt' | 'updatedAt' | 'versionNumber' | 'id'>>

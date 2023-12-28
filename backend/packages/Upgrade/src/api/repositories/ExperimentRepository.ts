@@ -1,11 +1,12 @@
 import { EXPERIMENT_STATE, SERVER_ERROR } from 'upgrade_types';
-import { Repository, EntityRepository, EntityManager, Brackets } from 'typeorm';
+import { Repository, EntityManager, Brackets } from 'typeorm';
 import { Experiment } from '../models/Experiment';
 import repositoryError from './utils/repositoryError';
 import { UpgradeLogger } from 'src/lib/logger/UpgradeLogger';
+import { InjectRepository } from 'typeorm-typedi-extensions';
 import { createGlobalExcludeSegment } from '../../../src/init/seed/globalExcludeSegment';
 
-@EntityRepository(Experiment)
+@InjectRepository(Experiment)
 export class ExperimentRepository extends Repository<Experiment> {
   public async findAllExperiments(): Promise<Experiment[]> {
     const experimentConditionLevelPayloadQuery = this.createQueryBuilder('experiment')
@@ -22,9 +23,9 @@ export class ExperimentRepository extends Repository<Experiment> {
       .leftJoinAndSelect('factors.levels', 'levels');
 
     const experimentMetricQuery = this.createQueryBuilder('experiment')
-    .leftJoinAndSelect('experiment.queries', 'queries')
-    .leftJoinAndSelect('queries.metric', 'metric')
-    .leftJoinAndSelect('experiment.stateTimeLogs', 'stateTimeLogs');
+      .leftJoinAndSelect('experiment.queries', 'queries')
+      .leftJoinAndSelect('queries.metric', 'metric')
+      .leftJoinAndSelect('experiment.stateTimeLogs', 'stateTimeLogs');
 
     const experimentSegment = this.createQueryBuilder('experiment')
       .select('experiment.id')
@@ -39,7 +40,12 @@ export class ExperimentRepository extends Repository<Experiment> {
       .leftJoinAndSelect('segmentExclusion.groupForSegment', 'groupForSegmentExclusion')
       .leftJoinAndSelect('segmentExclusion.subSegments', 'subSegmentExclusion');
 
-    const [experimentConditionLevelPayloadData, experimentFactorPartitionLevelPayloadData, experimentMetricData, experimentSegmentData] = await Promise.all([
+    const [
+      experimentConditionLevelPayloadData,
+      experimentFactorPartitionLevelPayloadData,
+      experimentMetricData,
+      experimentSegmentData,
+    ] = await Promise.all([
       experimentConditionLevelPayloadQuery.getMany().catch((errorMsg: any) => {
         const errorMsgString = repositoryError(
           'ExperimentRepository',

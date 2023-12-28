@@ -1,9 +1,10 @@
-import { Repository, EntityRepository, EntityManager } from 'typeorm';
+import { Repository, EntityManager } from 'typeorm';
 import repositoryError from './utils/repositoryError';
 import { StratificationFactor } from '../models/StratificationFactor';
 import { UpgradeLogger } from 'src/lib/logger/UpgradeLogger';
+import { InjectRepository } from 'typeorm-typedi-extensions';
 
-@EntityRepository(StratificationFactor)
+@InjectRepository(StratificationFactor)
 export class StratificationFactorRepository extends Repository<StratificationFactor> {
   public async insertStratificationFactor(
     stratificationFactorDoc: Array<Partial<StratificationFactor>>,

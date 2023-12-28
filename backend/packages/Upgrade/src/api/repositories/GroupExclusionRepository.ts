@@ -1,8 +1,9 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { GroupExclusion } from '../models/GroupExclusion';
 import repositoryError from './utils/repositoryError';
+import { InjectRepository } from 'typeorm-typedi-extensions';
 
-@EntityRepository(GroupExclusion)
+@InjectRepository(GroupExclusion)
 export class GroupExclusionRepository extends Repository<GroupExclusion> {
   public async saveRawJson(
     rawDataArray: Array<Omit<GroupExclusion, 'createdAt' | 'updatedAt' | 'versionNumber' | 'id'>>

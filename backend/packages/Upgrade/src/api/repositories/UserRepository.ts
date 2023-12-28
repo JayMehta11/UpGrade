@@ -1,9 +1,10 @@
-import { Repository, EntityRepository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { User } from '../models/User';
 import repositoryError from './utils/repositoryError';
 import { UserRole } from 'upgrade_types';
+import { InjectRepository } from 'typeorm-typedi-extensions';
 
-@EntityRepository(User)
+@InjectRepository(User)
 export class UserRepository extends Repository<User> {
   public async upsertUser(user: Partial<User>): Promise<User> {
     const result = await this.createQueryBuilder()

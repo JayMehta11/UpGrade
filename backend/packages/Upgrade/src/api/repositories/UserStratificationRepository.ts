@@ -1,6 +1,6 @@
-import { Repository, EntityRepository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { UserStratificationFactor } from '../models/UserStratificationFactor';
+import { InjectRepository } from 'typeorm-typedi-extensions';
 
-@EntityRepository(UserStratificationFactor)
-export class UserStratificationFactorRepository extends Repository<UserStratificationFactor> {
-}
+@InjectRepository(UserStratificationFactor)
+export class UserStratificationFactorRepository extends Repository<UserStratificationFactor> {}

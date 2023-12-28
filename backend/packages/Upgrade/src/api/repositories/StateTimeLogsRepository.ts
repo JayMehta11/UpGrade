@@ -1,5 +1,6 @@
+import { InjectRepository } from 'typeorm-typedi-extensions';
 import { StateTimeLog } from '../models/StateTimeLogs';
-import { Repository, EntityRepository } from 'typeorm';
+import { Repository } from 'typeorm';
 
-@EntityRepository(StateTimeLog)
+@InjectRepository(StateTimeLog)
 export class StateTimeLogsRepository extends Repository<StateTimeLog> {}

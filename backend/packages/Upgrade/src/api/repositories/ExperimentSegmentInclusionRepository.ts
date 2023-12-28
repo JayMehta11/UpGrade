@@ -1,9 +1,10 @@
-import { Repository, EntityRepository, EntityManager } from 'typeorm';
+import { Repository, EntityManager } from 'typeorm';
 import repositoryError from './utils/repositoryError';
 import { UpgradeLogger } from 'src/lib/logger/UpgradeLogger';
 import { ExperimentSegmentInclusion } from '../models/ExperimentSegmentInclusion';
+import { InjectRepository } from 'typeorm-typedi-extensions';
 
-@EntityRepository(ExperimentSegmentInclusion)
+@InjectRepository(ExperimentSegmentInclusion)
 export class ExperimentSegmentInclusionRepository extends Repository<ExperimentSegmentInclusion> {
   public async insertData(
     data: Partial<ExperimentSegmentInclusion>,

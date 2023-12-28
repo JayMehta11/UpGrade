@@ -1,9 +1,10 @@
-import { Repository, EntityRepository, EntityManager } from 'typeorm';
+import { Repository, EntityManager } from 'typeorm';
 import repositoryError from './utils/repositoryError';
 import { UpgradeLogger } from 'src/lib/logger/UpgradeLogger';
 import { LevelCombinationElement } from '../models/LevelCombinationElement';
+import { InjectRepository } from 'typeorm-typedi-extensions';
 
-@EntityRepository(LevelCombinationElement)
+@InjectRepository(LevelCombinationElement)
 export class LevelCombinationElementRepository extends Repository<LevelCombinationElement> {
   public async getAllLevelCombinationElement(logger: UpgradeLogger): Promise<LevelCombinationElement[]> {
     return await this.createQueryBuilder('levelCombinationElement')

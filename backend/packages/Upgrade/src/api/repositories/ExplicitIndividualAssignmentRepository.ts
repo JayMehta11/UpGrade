@@ -1,5 +1,6 @@
+import { InjectRepository } from 'typeorm-typedi-extensions';
 import { ExplicitIndividualAssignment } from '../models/ExplicitIndividualAssignment';
-import { Repository, EntityRepository } from 'typeorm';
+import { Repository } from 'typeorm';
 
-@EntityRepository(ExplicitIndividualAssignment)
+@InjectRepository(ExplicitIndividualAssignment)
 export class ExplicitIndividualAssignmentRepository extends Repository<ExplicitIndividualAssignment> {}

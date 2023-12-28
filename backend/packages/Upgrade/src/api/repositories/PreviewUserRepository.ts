@@ -1,10 +1,11 @@
-import { Repository, EntityRepository } from 'typeorm';
+import { Repository } from 'typeorm';
 import repositoryError from './utils/repositoryError';
 import { PreviewUser } from '../models/PreviewUser';
+import { InjectRepository } from 'typeorm-typedi-extensions';
 
 type UserInput = Omit<PreviewUser, 'createdAt' | 'updatedAt' | 'versionNumber'>;
 
-@EntityRepository(PreviewUser)
+@InjectRepository(PreviewUser)
 export class PreviewUserRepository extends Repository<PreviewUser> {
   public async saveRawJson(rawData: UserInput): Promise<PreviewUser> {
     const result = await this.createQueryBuilder('previewUser')

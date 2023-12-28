@@ -1,8 +1,9 @@
-import { Repository, EntityRepository, EntityManager } from 'typeorm';
+import { Repository, EntityManager } from 'typeorm';
 import repositoryError from './utils/repositoryError';
 import { FlagVariation } from '../models/FlagVariation';
+import { InjectRepository } from 'typeorm-typedi-extensions';
 
-@EntityRepository(FlagVariation)
+@InjectRepository(FlagVariation)
 export class FlagVariationRepository extends Repository<FlagVariation> {
   public async insertVariations(
     variationDocs: Array<Partial<FlagVariation>>,
