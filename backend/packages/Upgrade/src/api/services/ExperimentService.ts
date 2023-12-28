@@ -16,7 +16,7 @@ import { DecisionPointRepository } from '../repositories/DecisionPointRepository
 import { ExperimentCondition } from '../models/ExperimentCondition';
 import { DecisionPoint } from '../models/DecisionPoint';
 import { ScheduledJobService } from './ScheduledJobService';
-import { getConnection, In, EntityManager } from 'typeorm';
+import { In, EntityManager } from 'typeorm';
 import { ExperimentAuditLogRepository } from '../repositories/ExperimentAuditLogRepository';
 import { diffString } from 'json-diff';
 import {
@@ -104,7 +104,8 @@ export class ExperimentService {
     public scheduledJobService: ScheduledJobService,
     public errorService: ErrorService,
     public cacheService: CacheService,
-    public queryService: QueryService
+    public queryService: QueryService,
+    private entityManger: EntityManager
   ) {}
 
   public async find(logger?: UpgradeLogger): Promise<ExperimentDTO[]> {
@@ -309,7 +310,7 @@ export class ExperimentService {
     if (logger) {
       logger.info({ message: `Delete experiment =>  ${experimentId}` });
     }
-    return getConnection().transaction(async (transactionalEntityManager) => {
+    return this.entityManger.transaction(async (transactionalEntityManager) => {
       const experiment = await this.findOne(experimentId, logger);
       await this.clearExperimentCacheDetail(
         experiment.context[0],
@@ -410,10 +411,10 @@ export class ExperimentService {
     scheduleDate?: Date,
     entityManager?: EntityManager
   ): Promise<Experiment> {
-    const oldExperiment = await this.experimentRepository.findOne(
-      { id: experimentId },
-      { relations: ['stateTimeLogs', 'partitions', 'queries', 'queries.metric'] }
-    );
+    const oldExperiment = await this.experimentRepository.findOne({
+      where: { id: experimentId },
+      relations: ['stateTimeLogs', 'partitions', 'queries', 'queries.metric'],
+    });
     await this.clearExperimentCacheDetail(
       oldExperiment.context[0],
       oldExperiment.partitions.map((partition) => {
@@ -496,7 +497,7 @@ export class ExperimentService {
     logger: UpgradeLogger
   ): Promise<ExperimentDTO[]> {
     for (const experiment of experiments) {
-      const duplicateExperiment = await this.experimentRepository.findOne(experiment.id);
+      const duplicateExperiment = await this.experimentRepository.findOneBy({ id: experiment.id });
       if (duplicateExperiment && experiment.id) {
         const error = new Error('Duplicate experiment');
         (error as any).type = SERVER_ERROR.QUERY_FAILED;
@@ -506,7 +507,7 @@ export class ExperimentService {
       let experimentDecisionPoints = experiment.partitions;
       // Remove the decision points which already exist
       for (const decisionPoint of experimentDecisionPoints) {
-        const decisionPointExists = await this.decisionPointRepository.findOne(decisionPoint.id);
+        const decisionPointExists = await this.decisionPointRepository.findOneBy({ id: decisionPoint.id });
         if (decisionPointExists) {
           // provide new uuid:
           experimentDecisionPoints[experimentDecisionPoints.indexOf(decisionPoint)].id = uuid();
@@ -593,7 +594,7 @@ export class ExperimentService {
   ): Promise<void> {
     const experimentRepo = entityManager ? entityManager.getRepository(Experiment) : this.experimentRepository;
     logger.info({ message: `Updating experiment schedules for experiment ${experimentId}` });
-    const experiment = await experimentRepo.findByIds([experimentId]);
+    const experiment = await experimentRepo.findBy({ id: experimentId });
     if (experiment.length > 0 && this.scheduledJobService) {
       await this.scheduledJobService.updateExperimentSchedules(experiment[0], logger, entityManager);
     }
@@ -733,7 +734,7 @@ export class ExperimentService {
       this.scheduledJobService.updateExperimentSchedules(experiment as any, logger);
     }
 
-    return getConnection()
+    return this.entityManger
       .transaction(async (transactionalEntityManager) => {
         experiment.context = experiment.context.map((context) => context.toLocaleLowerCase());
         let uniqueIdentifiers = await this.getAllUniqueIdentifiers(logger);
@@ -1170,7 +1171,7 @@ export class ExperimentService {
         return { site: partition.site, target: partition.target };
       })
     );
-    const createdExperiment = await getConnection().transaction(async (transactionalEntityManager) => {
+    const createdExperiment = await this.entityManger.transaction(async (transactionalEntityManager) => {
       experiment.id = experiment.id || uuid();
       experiment.context = experiment.context.map((context) => context.toLocaleLowerCase());
       let uniqueIdentifiers = await this.getAllUniqueIdentifiers(logger);

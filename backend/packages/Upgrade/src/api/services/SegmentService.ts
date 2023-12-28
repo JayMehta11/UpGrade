@@ -6,7 +6,6 @@ import { GroupForSegmentRepository } from '../repositories/GroupForSegmentReposi
 import { Segment } from '../models/Segment';
 import { UpgradeLogger } from '../../lib/logger/UpgradeLogger';
 import { SEGMENT_TYPE, SERVER_ERROR, SEGMENT_STATUS, CACHE_PREFIX } from 'upgrade_types';
-import { getConnection } from 'typeorm';
 import { v4 as uuid } from 'uuid';
 import { ErrorWithType } from '../errors/ErrorWithType';
 import { IndividualForSegment } from '../models/IndividualForSegment';
@@ -17,6 +16,7 @@ import { ExperimentSegmentInclusionRepository } from '../repositories/Experiment
 import { getSegmentData } from '../controllers/SegmentController';
 import { globalExcludeSegment } from '../../init/seed/globalExcludeSegment';
 import { CacheService } from './CacheService';
+import { EntityManager } from 'typeorm';
 @Service()
 export class SegmentService {
   constructor(
@@ -30,7 +30,8 @@ export class SegmentService {
     private experimentSegmentExclusionRepository: ExperimentSegmentExclusionRepository,
     @InjectRepository()
     private experimentSegmentInclusionRepository: ExperimentSegmentInclusionRepository,
-    private cacheService: CacheService
+    private cacheService: CacheService,
+    private entityManager: EntityManager
   ) {}
 
   public async getAllSegments(logger: UpgradeLogger): Promise<Segment[]> {
@@ -79,7 +80,7 @@ export class SegmentService {
   }
 
   public async getAllSegmentWithStatus(logger: UpgradeLogger): Promise<getSegmentData> {
-    const segmentsData = await getConnection().transaction(async () => {
+    const segmentsData = await this.entityManager.transaction(async () => {
       const [segmentsData, allExperimentSegmentsInclusion, allExperimentSegmentsExclusion] = await Promise.all([
         this.getAllSegments(logger),
         this.getExperimentSegmenInclusionData(),
@@ -219,15 +220,16 @@ export class SegmentService {
   }
 
   async addSegmentDataInDB(segment: SegmentInputValidator, logger: UpgradeLogger): Promise<Segment> {
-    const createdSegment = await getConnection().transaction(async (transactionalEntityManager) => {
+    const createdSegment = await this.entityManager.transaction(async (transactionalEntityManager) => {
       let segmentDoc: Segment;
 
       if (segment.id) {
         try {
           // get segment by ids
-          segmentDoc = await transactionalEntityManager
-            .getRepository(Segment)
-            .findOne(segment.id, { relations: ['individualForSegment', 'groupForSegment', 'subSegments'] });
+          segmentDoc = await transactionalEntityManager.getRepository(Segment).findOne({
+            where: { id: segment.id },
+            relations: ['individualForSegment', 'groupForSegment', 'subSegments'],
+          });
 
           // delete individual for segment
           if (segmentDoc && segmentDoc.individualForSegment && segmentDoc.individualForSegment.length > 0) {
@@ -315,9 +317,10 @@ export class SegmentService {
         throw error;
       }
 
-      return transactionalEntityManager
-        .getRepository(Segment)
-        .findOne(segmentDoc.id, { relations: ['individualForSegment', 'groupForSegment', 'subSegments'] });
+      return transactionalEntityManager.getRepository(Segment).findOne({
+        where: { id: segmentDoc.id },
+        relations: ['individualForSegment', 'groupForSegment', 'subSegments'],
+      });
     });
 
     // reset caching

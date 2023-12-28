@@ -6,7 +6,7 @@ import { ExperimentUserRepository } from '../repositories/ExperimentUserReposito
 import { ExperimentUser } from '../models/ExperimentUser';
 import { ExperimentRepository } from '../repositories/ExperimentRepository';
 import { ASSIGNMENT_UNIT, CONSISTENCY_RULE, EXPERIMENT_STATE, IUserAliases, SERVER_ERROR } from 'upgrade_types';
-import { getConnection, In, Not } from 'typeorm';
+import { EntityManager, In, Not } from 'typeorm';
 import { IndividualExclusionRepository } from '../repositories/IndividualExclusionRepository';
 import { GroupExclusionRepository } from '../repositories/GroupExclusionRepository';
 import { Experiment } from '../models/Experiment';
@@ -20,7 +20,8 @@ export class ExperimentUserService {
     @InjectRepository() private experimentRepository: ExperimentRepository,
     @InjectRepository() private individualEnrollmentRepository: IndividualEnrollmentRepository,
     @InjectRepository() private individualExclusionRepository: IndividualExclusionRepository,
-    @InjectRepository() private groupExclusionRepository: GroupExclusionRepository
+    @InjectRepository() private groupExclusionRepository: GroupExclusionRepository,
+    private entityManager: EntityManager
   ) {}
 
   public find(logger?: UpgradeLogger): Promise<ExperimentUser[]> {
@@ -32,7 +33,7 @@ export class ExperimentUserService {
 
   public findOne(id: string, logger: UpgradeLogger): Promise<ExperimentUser> {
     logger.info({ message: `Find user by id => ${id}` });
-    return this.userRepository.findOne({ id });
+    return this.userRepository.findOneBy({ id });
   }
 
   public async upsertOnChange(
@@ -346,7 +347,7 @@ export class ExperimentUserService {
   }
 
   public async clearDB(logger: UpgradeLogger): Promise<void> {
-    await getConnection().transaction(async (transactionalEntityManager) => {
+    await this.entityManager.transaction(async (transactionalEntityManager) => {
       await this.experimentRepository.clearDB(transactionalEntityManager, logger);
     });
   }
@@ -459,8 +460,8 @@ export class ExperimentUserService {
       await this.individualExclusionRepository.deleteExperimentsForUserId(userId, excludedExperimentIds);
 
       // check if other individual exclusions are present for that group
-      const otherExclusions = await this.individualExclusionRepository.find({
-        where: { experimentId: In(excludedExperimentIds) },
+      const otherExclusions = await this.individualExclusionRepository.findBy({
+        experiment: In(excludedExperimentIds),
       });
       const otherExcludedExperimentIds = otherExclusions.map((otherExclusion) => otherExclusion.experiment.id);
       // remove group exclusion
@@ -490,7 +491,7 @@ export class ExperimentUserService {
     const excludedExperimentIds = individualExclusions.map((individualExclusion) => individualExclusion.experiment.id);
     if (excludedExperimentIds.length > 0) {
       const otherExclusions = await this.individualExclusionRepository.find({
-        where: { experimentId: In(excludedExperimentIds), userId: Not(userId) },
+        where: { experiment: In(excludedExperimentIds), user: Not(userId) },
       });
       const otherExcludedExperimentIds = otherExclusions.map((otherExclusion) => otherExclusion.experiment.id);
       // remove group exclusion

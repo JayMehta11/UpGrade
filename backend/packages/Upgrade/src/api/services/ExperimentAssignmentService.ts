@@ -68,6 +68,7 @@ import { withInSubjectType } from '../Algorithms';
 import { CacheService } from './CacheService';
 import { UserStratificationFactorRepository } from '../repositories/UserStratificationRepository';
 import { UserStratificationFactor } from '../models/UserStratificationFactor';
+import { In } from 'typeorm';
 @Service()
 export class ExperimentAssignmentService {
   constructor(
@@ -258,7 +259,7 @@ export class ExperimentAssignmentService {
         where: {
           site: site,
           target: target,
-          user: userId,
+          user: { id: userId },
         },
         relations: ['user'],
       });
@@ -1139,7 +1140,7 @@ export class ExperimentAssignmentService {
     // get groupAssignment and individual assignment details
     const decisionPoints = experimentDoc.partitions;
     const individualAssignments = await this.individualEnrollmentRepository.find({
-      where: { experiment: experimentDoc },
+      where: { experiment: { id: experimentDoc.id } },
       relations: ['user'],
     });
 
@@ -1160,19 +1161,18 @@ export class ExperimentAssignmentService {
     individualAssignments.forEach((individualAssignment) => {
       experimentDecisionPointIds.forEach(async (experimentDecisionPointId) => {
         monitoredDocumentIds.push(
-          await this.monitoredDecisionPointRepository.findOne({
-            where: {
-              site: (await experimentDecisionPointId).site,
-              target: (await experimentDecisionPointId).target,
-              user: individualAssignment.user.id,
-            },
+          await this.monitoredDecisionPointRepository.findOneBy({
+            site: (await experimentDecisionPointId).site,
+            target: (await experimentDecisionPointId).target,
+            user: { id: individualAssignment.user.id },
           })
         );
       });
     });
 
     // fetch all the monitored document if exist
-    const monitoredDocuments = await this.monitoredDecisionPointRepository.findByIds(monitoredDocumentIds, {
+    const monitoredDocuments = await this.monitoredDecisionPointRepository.find({
+      where: { id: In(monitoredDocumentIds) },
       relations: ['user'],
     });
 

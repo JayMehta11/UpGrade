@@ -2,7 +2,6 @@ import { Service } from 'typedi';
 import { FeatureFlag } from '../models/FeatureFlag';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { FeatureFlagRepository } from '../repositories/FeatureFlagRepository';
-import { getConnection } from 'typeorm';
 import { v4 as uuid } from 'uuid';
 import { FlagVariation } from '../models/FlagVariation';
 import { FlagVariationRepository } from '../repositories/FlagVariationRepository';
@@ -14,12 +13,14 @@ import {
 import { SERVER_ERROR } from 'upgrade_types';
 import { UpgradeLogger } from '../../lib/logger/UpgradeLogger';
 import { FeatureFlagValidation } from '../controllers/validators/FeatureFlagValidator';
+import { EntityManager } from 'typeorm';
 
 @Service()
 export class FeatureFlagService {
   constructor(
     @InjectRepository() private featureFlagRepository: FeatureFlagRepository,
-    @InjectRepository() private flagVariationRepository: FlagVariationRepository
+    @InjectRepository() private flagVariationRepository: FlagVariationRepository,
+    private entityManager: EntityManager
   ) {}
 
   public find(logger: UpgradeLogger): Promise<FeatureFlag[]> {
@@ -94,7 +95,7 @@ export class FeatureFlagService {
   }
 
   private async addFeatureFlagInDB(flag: FeatureFlag, logger: UpgradeLogger): Promise<FeatureFlag> {
-    const createdFeatureFlag = await getConnection().transaction(async (transactionalEntityManager) => {
+    const createdFeatureFlag = await this.entityManager.transaction(async (transactionalEntityManager) => {
       flag.id = uuid();
       const { variations, ...flagDoc } = flag;
       // saving experiment doc
@@ -154,7 +155,7 @@ export class FeatureFlagService {
     });
     const oldVariations = oldFeatureFlag[0].variations;
 
-    return getConnection().transaction(async (transactionalEntityManager) => {
+    return this.entityManager.transaction(async (transactionalEntityManager) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { variations, versionNumber, createdAt, updatedAt, ...flagDoc } = flag;
       let featureFlagDoc: FeatureFlag;

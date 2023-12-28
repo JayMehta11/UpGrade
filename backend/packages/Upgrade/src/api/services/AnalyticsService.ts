@@ -25,7 +25,6 @@ import { ExperimentAuditLogRepository } from '../repositories/ExperimentAuditLog
 import { UserRepository } from '../repositories/UserRepository';
 import { UpgradeLogger } from '../../lib/logger/UpgradeLogger';
 import { METRICS_JOIN_TEXT } from './MetricService';
-import { getCustomRepository } from 'typeorm';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -49,6 +48,8 @@ export class AnalyticsService {
     private experimentAuditLogRepository: ExperimentAuditLogRepository,
     @InjectRepository()
     private logRepository: LogRepository,
+    @InjectRepository()
+    private userRepository: UserRepository,
     public awsService: AWSService,
     public errorService: ErrorService
   ) {}
@@ -110,7 +111,10 @@ export class AnalyticsService {
     }
 
     const promiseArray = await Promise.all([
-      this.experimentRepository.findOne(experimentId, { relations: ['conditions', 'partitions'] }),
+      this.experimentRepository.findOne({
+        where: { id: experimentId },
+        relations: ['conditions', 'partitions'],
+      }),
       this.analyticsRepository.getEnrollmentByDateRange(experimentId, dateRange, clientOffset),
     ]);
 
@@ -171,12 +175,11 @@ export class AnalyticsService {
       }
       const simpleExportCSV = `${email}_simpleExport${timeStamp}.csv`;
 
-      const userRepository: UserRepository = getCustomRepository(UserRepository, 'export');
       const [experiment, user] = await Promise.all([
         this.experimentRepository.findOne({
           where: { id: experimentId },
         }),
-        userRepository.findOne({ email }),
+        this.userRepository.findOneBy({ email }),
       ]);
 
       // make new query here

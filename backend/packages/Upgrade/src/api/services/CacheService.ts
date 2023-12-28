@@ -1,25 +1,26 @@
 import { env } from './../../env';
 import { Service } from 'typedi';
-import { MemoryCache, caching } from 'cache-manager';
+import { Cache, caching } from 'cache-manager';
 import { CACHE_PREFIX } from 'upgrade_types';
 
 @Service()
 export class CacheService {
-  private memoryCache: MemoryCache;
+  private memoryCache: Cache;
   private ttl = env.caching.ttl || 900;
 
   constructor() {
     // read from the environment variable for initializing caching
+    let store: 'memory' | 'none';
     if (env.caching.enabled) {
-      this.initializeMemoryCache();
+      store = 'memory';
+    } else {
+      store = 'none';
     }
+    this.initializeMemoryCache(store);
   }
 
-  private async initializeMemoryCache() {
-    this.memoryCache = await caching('memory', {
-      max: 100,
-      ttl: this.ttl * 1000 /*milliseconds*/,
-    });
+  private async initializeMemoryCache(store: 'memory' | 'none') {
+    this.memoryCache = await caching({ store: store, max: 100, ttl: this.ttl * 1000 /*milliseconds*/ });
   }
 
   public setCache<T>(id: string, value: T): Promise<T> {
@@ -39,8 +40,8 @@ export class CacheService {
 
   public async resetPrefixCache(prefix: string): Promise<void> {
     const keys = this.memoryCache ? await this.memoryCache.store.keys() : [];
-    const filteredKeys = keys.filter((str) => str.startsWith(prefix));
-    return this.memoryCache.store.mdel(...filteredKeys);
+    const filteredKeys = keys.filter((str: string) => str.startsWith(prefix));
+    return this.memoryCache.store.del(...filteredKeys);
   }
 
   public async resetAllCache(): Promise<void> {
