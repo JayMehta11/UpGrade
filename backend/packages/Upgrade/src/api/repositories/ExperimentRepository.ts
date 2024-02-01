@@ -3,10 +3,8 @@ import { Repository, EntityManager, Brackets } from 'typeorm';
 import { Experiment } from '../models/Experiment';
 import repositoryError from './utils/repositoryError';
 import { UpgradeLogger } from 'src/lib/logger/UpgradeLogger';
-import { InjectRepository } from 'typeorm-typedi-extensions';
 import { createGlobalExcludeSegment } from '../../../src/init/seed/globalExcludeSegment';
 
-@InjectRepository(Experiment)
 export class ExperimentRepository extends Repository<Experiment> {
   public async findAllExperiments(): Promise<Experiment[]> {
     const experimentConditionLevelPayloadQuery = this.createQueryBuilder('experiment')

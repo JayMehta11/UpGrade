@@ -1,8 +1,6 @@
 import { Repository, In, DeleteResult } from 'typeorm';
 import { IndividualEnrollment } from '../models/IndividualEnrollment';
-import { InjectRepository } from 'typeorm-typedi-extensions';
 
-@InjectRepository(IndividualEnrollment)
 export class IndividualEnrollmentRepository extends Repository<IndividualEnrollment> {
   public findEnrollments(userId: string, experimentIds: string[]): Promise<IndividualEnrollment[]> {
     return this.find({

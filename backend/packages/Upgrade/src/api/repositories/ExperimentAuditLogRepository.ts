@@ -3,9 +3,7 @@ import { Repository, EntityManager } from 'typeorm';
 import { EXPERIMENT_LOG_TYPE } from 'upgrade_types';
 import { User } from '../models/User';
 import repositoryError from './utils/repositoryError';
-import { InjectRepository } from 'typeorm-typedi-extensions';
 
-@InjectRepository(ExperimentAuditLog)
 export class ExperimentAuditLogRepository extends Repository<ExperimentAuditLog> {
   public async paginatedFind(
     limit: number,

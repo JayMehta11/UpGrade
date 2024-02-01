@@ -2,9 +2,7 @@ import { Repository } from 'typeorm';
 import repositoryError from './utils/repositoryError';
 import { UpgradeLogger } from 'src/lib/logger/UpgradeLogger';
 import { Segment } from '../models/Segment';
-import { InjectRepository } from 'typeorm-typedi-extensions';
 
-@InjectRepository(Segment)
 export class SegmentRepository extends Repository<Segment> {
   public async getAllSegments(logger: UpgradeLogger): Promise<Segment[]> {
     return await this.createQueryBuilder('segment')

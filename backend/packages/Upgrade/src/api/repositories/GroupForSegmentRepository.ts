@@ -2,9 +2,7 @@ import { Repository, EntityManager } from 'typeorm';
 import repositoryError from './utils/repositoryError';
 import { UpgradeLogger } from 'src/lib/logger/UpgradeLogger';
 import { GroupForSegment } from '../models/GroupForSegment';
-import { InjectRepository } from 'typeorm-typedi-extensions';
 
-@InjectRepository(GroupForSegment)
 export class GroupForSegmentRepository extends Repository<GroupForSegment> {
   public async getGroupForSegmentById(segmentId: string, logger: UpgradeLogger): Promise<GroupForSegment[]> {
     return this.createQueryBuilder('groupForSegment')

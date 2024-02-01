@@ -1,11 +1,9 @@
 import { Repository } from 'typeorm';
 import { ExperimentUser } from '../models/ExperimentUser';
 import repositoryError from './utils/repositoryError';
-import { InjectRepository } from 'typeorm-typedi-extensions';
 
 type UserInput = Omit<ExperimentUser, 'createdAt' | 'updatedAt' | 'versionNumber' | 'workingGroup'>;
 
-@InjectRepository(ExperimentUser)
 export class ExperimentUserRepository extends Repository<ExperimentUser> {
   public async saveRawJson(rawData: UserInput): Promise<ExperimentUser> {
     const result = await this.createQueryBuilder('experimentUser')

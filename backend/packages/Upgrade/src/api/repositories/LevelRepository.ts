@@ -2,9 +2,7 @@ import { Repository, EntityManager } from 'typeorm';
 import repositoryError from './utils/repositoryError';
 import { UpgradeLogger } from 'src/lib/logger/UpgradeLogger';
 import { Level } from '../models/Level';
-import { InjectRepository } from 'typeorm-typedi-extensions';
 
-@InjectRepository(Level)
 export class LevelRepository extends Repository<Level> {
   public async getAllLevel(logger: UpgradeLogger): Promise<Level[]> {
     return await this.createQueryBuilder('level')

@@ -1,9 +1,7 @@
 import { Repository } from 'typeorm';
 import { ArchivedStats } from '../models/ArchivedStats';
 import repositoryError from './utils/repositoryError';
-import { InjectRepository } from 'typeorm-typedi-extensions';
 
-@InjectRepository(ArchivedStats)
 export class ArchivedStatsRepository extends Repository<ArchivedStats> {
   public async saveRawJson(
     rawDataArray: Array<Omit<ArchivedStats, 'createdAt' | 'updatedAt' | 'versionNumber'>>

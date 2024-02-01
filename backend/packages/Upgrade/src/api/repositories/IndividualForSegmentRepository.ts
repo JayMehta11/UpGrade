@@ -2,9 +2,7 @@ import { Repository, EntityManager } from 'typeorm';
 import repositoryError from './utils/repositoryError';
 import { UpgradeLogger } from 'src/lib/logger/UpgradeLogger';
 import { IndividualForSegment } from '../models/IndividualForSegment';
-import { InjectRepository } from 'typeorm-typedi-extensions';
 
-@InjectRepository(IndividualForSegment)
 export class IndividualForSegmentRepository extends Repository<IndividualForSegment> {
   public async getIndividualForSegmentById(segmentId: string, logger: UpgradeLogger): Promise<IndividualForSegment[]> {
     return this.createQueryBuilder('individualForSegment')

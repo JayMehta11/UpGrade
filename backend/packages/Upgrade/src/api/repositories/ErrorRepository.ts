@@ -2,9 +2,7 @@ import { Repository } from 'typeorm';
 import { ExperimentError } from '../models/ExperimentError';
 import repositoryError from './utils/repositoryError';
 import { SERVER_ERROR } from 'upgrade_types';
-import { InjectRepository } from 'typeorm-typedi-extensions';
 
-@InjectRepository(ExperimentError)
 export class ErrorRepository extends Repository<ExperimentError> {
   public async saveRawJson(error: ExperimentError): Promise<ExperimentError> {
     const result = await this.createQueryBuilder()

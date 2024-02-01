@@ -1,9 +1,7 @@
 import { Repository, EntityManager } from 'typeorm';
 import { Query } from '../models/Query';
 import repositoryError from './utils/repositoryError';
-import { InjectRepository } from 'typeorm-typedi-extensions';
 
-@InjectRepository(Query)
 export class QueryRepository extends Repository<Query> {
   public async deleteQuery(id: string, entityManager: EntityManager): Promise<void> {
     await entityManager

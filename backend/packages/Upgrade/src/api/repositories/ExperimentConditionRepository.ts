@@ -1,9 +1,7 @@
 import { ExperimentCondition } from '../models/ExperimentCondition';
 import { Repository, EntityManager } from 'typeorm';
 import repositoryError from './utils/repositoryError';
-import { InjectRepository } from 'typeorm-typedi-extensions';
 
-@InjectRepository(ExperimentCondition)
 export class ExperimentConditionRepository extends Repository<ExperimentCondition> {
   public async upsertExperimentCondition(
     conditionDoc: Partial<ExperimentCondition>,

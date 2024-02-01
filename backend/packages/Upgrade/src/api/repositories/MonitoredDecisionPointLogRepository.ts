@@ -2,9 +2,7 @@ import { MonitoredDecisionPointLog } from '../models/MonitoredDecisionPointLog';
 import { Repository } from 'typeorm';
 import repositoryError from './utils/repositoryError';
 import { UpgradeLogger } from 'src/lib/logger/UpgradeLogger';
-import { InjectRepository } from 'typeorm-typedi-extensions';
 
-@InjectRepository(MonitoredDecisionPointLog)
 export class MonitoredDecisionPointLogRepository extends Repository<MonitoredDecisionPointLog> {
   public async getAllMonitoredDecisionPointLog(
     userId: string,

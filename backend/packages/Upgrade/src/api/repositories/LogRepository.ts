@@ -12,9 +12,7 @@ import { LevelCombinationElement } from '../models/LevelCombinationElement';
 import { MonitoredDecisionPoint } from '../models/MonitoredDecisionPoint';
 import { MonitoredDecisionPointLog } from '../models/MonitoredDecisionPointLog';
 import { ExperimentCondition } from '../models/ExperimentCondition';
-import { InjectRepository } from 'typeorm-typedi-extensions';
 
-@InjectRepository(Log)
 export class LogRepository extends Repository<Log> {
   public async deleteExceptByIds(values: string[], entityManager: EntityManager): Promise<Log[]> {
     if (values.length > 0) {

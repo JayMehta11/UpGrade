@@ -63,7 +63,6 @@ export interface CSVExportDataRow {
   target: string;
 }
 
-@InjectRepository()
 export class AnalyticsRepository {
   constructor(
     @InjectRepository(IndividualEnrollment)

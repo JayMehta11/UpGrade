@@ -2,9 +2,7 @@ import { Repository, EntityManager } from 'typeorm';
 import repositoryError from './utils/repositoryError';
 import { UpgradeLogger } from 'src/lib/logger/UpgradeLogger';
 import { ConditionPayload } from '../models/ConditionPayload';
-import { InjectRepository } from 'typeorm-typedi-extensions';
 
-@InjectRepository(ConditionPayload)
 export class ConditionPayloadRepository extends Repository<ConditionPayload> {
   public async getAllConditionPayload(logger: UpgradeLogger): Promise<ConditionPayload[]> {
     return await this.createQueryBuilder('conditionPayload')

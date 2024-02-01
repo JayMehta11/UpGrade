@@ -2,9 +2,7 @@ import { Metric } from '../models/Metric';
 import { Repository } from 'typeorm';
 import repositoryError from './utils/repositoryError';
 import { EXPERIMENT_STATE } from 'upgrade_types';
-import { InjectRepository } from 'typeorm-typedi-extensions';
 
-@InjectRepository(Metric)
 export class MetricRepository extends Repository<Metric> {
   public async deleteMetricsByKeys(key: string, metricJoinText: string): Promise<Metric[]> {
     const result = await this.createQueryBuilder()
