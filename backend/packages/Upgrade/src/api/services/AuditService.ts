@@ -11,7 +11,18 @@ export class AuditService {
     private experimentAuditLogRepository: ExperimentAuditLogRepository
   ) {}
 
+  public getTotalLogs(filter: EXPERIMENT_LOG_TYPE): Promise<number> {
+    if (filter) {
+      return this.experimentAuditLogRepository.getTotalLogs(filter);
+    }
+    return this.experimentAuditLogRepository.count();
+  }
+
+  public getAuditLogs(limit: number, offset: number, filter?: EXPERIMENT_LOG_TYPE): Promise<ExperimentAuditLog[]> {
+    return this.experimentAuditLogRepository.paginatedFind(limit, offset, filter);
+  }
+
   public getAuditLogByType(type: EXPERIMENT_LOG_TYPE): Promise<ExperimentAuditLog[]> {
-    return this.experimentAuditLogRepository.findBy({ type });
+    return this.experimentAuditLogRepository.find({ where: { type } });
   }
 }

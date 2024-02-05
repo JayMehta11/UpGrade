@@ -1,26 +1,25 @@
 import { env } from './../../env';
 import { Service } from 'typedi';
-import { Cache, caching } from 'cache-manager';
+import { MemoryCache, caching } from 'cache-manager';
 import { CACHE_PREFIX } from 'upgrade_types';
 
 @Service()
 export class CacheService {
-  private memoryCache: Cache;
+  private memoryCache: MemoryCache;
   private ttl = env.caching.ttl || 900;
 
   constructor() {
     // read from the environment variable for initializing caching
-    let store: 'memory' | 'none';
     if (env.caching.enabled) {
-      store = 'memory';
-    } else {
-      store = 'none';
+      this.initializeMemoryCache();
     }
-    this.initializeMemoryCache(store);
   }
 
-  private async initializeMemoryCache(store: 'memory' | 'none') {
-    this.memoryCache = await caching({ store: store, max: 100, ttl: this.ttl * 1000 /*milliseconds*/ });
+  private async initializeMemoryCache() {
+    this.memoryCache = await caching('memory', {
+      max: 100,
+      ttl: this.ttl * 1000 /*milliseconds*/,
+    });
   }
 
   public setCache<T>(id: string, value: T): Promise<T> {
@@ -40,8 +39,8 @@ export class CacheService {
 
   public async resetPrefixCache(prefix: string): Promise<void> {
     const keys = this.memoryCache ? await this.memoryCache.store.keys() : [];
-    const filteredKeys = keys.filter((str: string) => str.startsWith(prefix));
-    return this.memoryCache.store.del(...filteredKeys);
+    const filteredKeys = keys.filter((str) => str.startsWith(prefix));
+    return this.memoryCache ? this.memoryCache.store.mdel(...filteredKeys) : null;
   }
 
   public async resetAllCache(): Promise<void> {
@@ -54,17 +53,26 @@ export class CacheService {
   }
 
   public async wrapFunction<T>(prefix: CACHE_PREFIX, keys: string[], functionToCall: () => Promise<T[]>): Promise<T[]> {
-    const cachedData = await this.memoryCache.store.mget(...keys);
+    const cachedData = this.memoryCache ? await this.memoryCache.store.mget(...keys) : [];
 
     const allCachedFound = cachedData.every((cached) => !!cached);
-    if (allCachedFound) {
+    if (allCachedFound && env.caching.enabled) {
       return cachedData as T[];
     }
 
     const data = await functionToCall();
 
     // creata an array of array containing key and data and then set it in cache
-    await this.memoryCache.store.mset(keys.map((key, index) => [prefix + key, data[index]]));
+    if (this.memoryCache) {
+      await this.memoryCache.store.mset(
+        keys.reduce((acc, key, index) => {
+          if (data[index] !== null && data[index] !== undefined) {
+            acc.push([prefix + key, data[index]]);
+          }
+          return acc;
+        }, [])
+      );
+    }
     return data;
   }
 }
