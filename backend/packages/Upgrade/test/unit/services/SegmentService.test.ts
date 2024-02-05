@@ -1,6 +1,6 @@
 import { SegmentService } from '../../../src/api/services/SegmentService';
 import * as sinon from 'sinon';
-import { Connection, ConnectionManager } from 'typeorm';
+import { EntityManager } from 'typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { SegmentRepository } from '../../../src/api/repositories/SegmentRepository';
@@ -43,10 +43,11 @@ describe('Segment Service Testing', () => {
 
   const sandbox = sinon.createSandbox();
 
-  const entityManagerMock = { createQueryBuilder: () => queryBuilderMock, getRepository: () => repo };
-  sandbox.stub(ConnectionManager.prototype, 'get').returns({
+  const entityManagerMock = {
+    createQueryBuilder: () => queryBuilderMock,
     transaction: jest.fn(async (passedFunction) => await passedFunction(entityManagerMock)),
-  } as unknown as Connection);
+  };
+  sandbox.stub(EntityManager.prototype, 'transaction').callsFake(entityManagerMock.transaction);
 
   beforeEach(async () => {
     exp.id = 'exp1';
@@ -89,6 +90,7 @@ describe('Segment Service Testing', () => {
         ExperimentSegmentInclusionRepository,
         CacheService,
         SegmentRepository,
+        EntityManager,
         {
           provide: getRepositoryToken(SegmentRepository),
           useValue: {

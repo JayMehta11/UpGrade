@@ -1,6 +1,6 @@
 import { FeatureFlagService } from '../../../src/api/services/FeatureFlagService';
 import * as sinon from 'sinon';
-import { Connection, ConnectionManager } from 'typeorm';
+import { EntityManager } from 'typeorm';
 import { Test, TestingModuleBuilder } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { UpgradeLogger } from '../../../src/lib/logger/UpgradeLogger';
@@ -69,11 +69,12 @@ describe('Feature Flag Service Testing', () => {
     getMany: jest.fn().mockResolvedValue(mockFlagArr),
   };
 
-  const entityManagerMock = { createQueryBuilder: () => queryBuilderMock };
-  const sandbox = sinon.createSandbox();
-  sandbox.stub(ConnectionManager.prototype, 'get').returns({
+  const entityManagerMock = {
+    createQueryBuilder: () => queryBuilderMock,
     transaction: jest.fn(async (passedFunction) => await passedFunction(entityManagerMock)),
-  } as unknown as Connection);
+  };
+  const sandbox = sinon.createSandbox();
+  sandbox.stub(EntityManager.prototype, 'transaction').callsFake(entityManagerMock.transaction);
 
   beforeEach(async () => {
     module = await Test.createTestingModule({
@@ -81,6 +82,7 @@ describe('Feature Flag Service Testing', () => {
         FeatureFlagService,
         FeatureFlagRepository,
         FlagVariationRepository,
+        EntityManager,
         {
           provide: getRepositoryToken(FeatureFlagRepository),
           useValue: {

@@ -1,5 +1,5 @@
 import { ScheduledJobService } from '../../../src/api/services/ScheduledJobService';
-import { Connection, ConnectionManager, Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { UpgradeLogger } from '../../../src/lib/logger/UpgradeLogger';
@@ -56,11 +56,11 @@ describe('Scheduled Job Service Testing', () => {
 
   const sandbox = sinon.createSandbox();
 
-  const entityManagerMock = { createQueryBuilder: () => queryBuilderMock, getRepository: () => scheduledJobRepo };
-  sandbox.stub(ConnectionManager.prototype, 'get').returns({
+  const entityManagerMock = {
+    createQueryBuilder: () => queryBuilderMock,
     transaction: jest.fn(async (passedFunction) => await passedFunction(entityManagerMock)),
-  } as unknown as Connection);
-
+  };
+  sandbox.stub(EntityManager.prototype, 'transaction').callsFake(entityManagerMock.transaction);
   beforeEach(async () => {
     Container.set(ExperimentService, new ExperimentServiceMock());
 
@@ -71,6 +71,7 @@ describe('Scheduled Job Service Testing', () => {
         ExperimentAuditLogRepository,
         ErrorRepository,
         AWSService,
+        EntityManager,
         {
           provide: getRepositoryToken(ScheduledJobRepository),
           useValue: {
