@@ -4,7 +4,7 @@
 
 @include mat.core();
 
-mat.$blue-palette: (
+$blue-palette: (
   50: #e7edff,
   100: #c2d1ff,
   200: #99b3ff,
@@ -37,7 +37,7 @@ mat.$blue-palette: (
   )
 );
 
-mat.$red-palette: (
+$red-palette: (
   50: #ffe0e0,
   100: #ffb3b3,
   200: #ff8080,

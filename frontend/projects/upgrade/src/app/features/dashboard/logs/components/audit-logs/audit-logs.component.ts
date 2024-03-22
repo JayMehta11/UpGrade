@@ -3,7 +3,7 @@ import { LogType, LogDateFormatType, AuditLogs } from '../../../../../core/logs/
 import { KeyValue } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { LogsService } from '../../../../../core/logs/logs.service';
-import * as groupBy from 'lodash.groupby';
+import groupBy from 'lodash.groupby';
 import { SettingsService } from '../../../../../core/settings/settings.service';
 
 @Component({

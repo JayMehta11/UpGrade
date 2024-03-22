@@ -6,7 +6,7 @@ import { AuthService } from '../../../../../core/auth/auth.service';
 import { filter } from 'rxjs/operators';
 import { SegmentsService } from '../../../../../core/segments/segments.service';
 import { NewSegmentComponent } from '../../components/modal/new-segment/new-segment.component';
-import * as clonedeep from 'lodash.clonedeep';
+import clonedeep from 'lodash.clonedeep';
 import { DuplicateSegmentComponent } from '../../components/modal/duplicate-segment/duplicate-segment.component';
 import { MemberTypes, Segment } from '../../../../../core/segments/store/segments.model';
 import { SEGMENT_TYPE } from 'upgrade_types';

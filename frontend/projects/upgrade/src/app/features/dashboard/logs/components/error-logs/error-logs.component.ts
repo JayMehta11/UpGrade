@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { LogType, ErrorLogs, LogDateFormatType } from '../../../../../core/logs/store/logs.model';
 import { LogsService } from '../../../../../core/logs/logs.service';
-import * as groupBy from 'lodash.groupby';
+import groupBy from 'lodash.groupby';
 import { KeyValue } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { SettingsService } from '../../../../../core/settings/settings.service';

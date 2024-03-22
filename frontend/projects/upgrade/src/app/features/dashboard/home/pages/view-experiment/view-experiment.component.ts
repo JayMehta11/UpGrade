@@ -16,7 +16,7 @@ import { filter, withLatestFrom } from 'rxjs/operators';
 import { UserPermission } from '../../../../../core/auth/store/auth.models';
 import { AuthService } from '../../../../../core/auth/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import * as clonedeep from 'lodash.clonedeep';
+import clonedeep from 'lodash.clonedeep';
 import { ExperimentStatePipeType } from '../../../../../shared/pipes/experiment-state.pipe';
 import { DeleteComponent } from '../../../../../shared/components/delete/delete.component';
 import { QueriesModalComponent } from '../../components/modal/queries-modal/queries-modal.component';

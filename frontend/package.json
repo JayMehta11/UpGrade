@@ -2,8 +2,10 @@
   "name": "ab-testing",
   "version": "5.2.0",
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "ng": "ng",
+    "vite": "vite",
     "start": "ng serve --open",
     "docker:local": "ng serve --open --host 0.0.0.0",
     "cl:build": "npm run build:prod && npm run cl:copy-package-json",
@@ -69,6 +71,7 @@
     "rxjs": "7.8.1",
     "tslib": "^2.6.2",
     "uuid": "^9.0.1",
+    "vite": "^5.2.2",
     "zone.js": "^0.14.3"
   },
   "overrides": {
