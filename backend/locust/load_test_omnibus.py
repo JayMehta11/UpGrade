@@ -1,5 +1,6 @@
 from datetime import datetime
 import random
+import string
 import uuid
 from  upgrade_mathia_data import modules, workspaces
 from locust import HttpUser, SequentialTaskSet, task, tag, between
@@ -14,7 +15,7 @@ schools = {
 students = {}
 # allExperimentPartitionIDConditionPair = []
 # For load testing on existing prod experiments:
-allExperimentPartitionIDConditionPair = [
+omnibusExperimentPartitionIDConditionPair = [
     {"site": "SelectSection", "target" : "worksheet_grapher_a1_direct_variation", "condition" : "control"},
     {"site": "SelectSection", "target" : "worksheet_grapher_a1_lin_mod_mult_rep", "condition" : "control"},
     {"site": "SelectSection", "target" : "worksheet_grapher_a1_slope_intercept_decimal", "condition" : "control"},
@@ -74,9 +75,9 @@ experimentCount = int(input("Enter the number of experiments to be created: "))
 for i in range(experimentCount):
     experimentType = int(input("Enter the experiment type: Enter 1 for Simple and 2 for Factorial:"))
     # returning the updated partionconditionpair list:
-    allExperimentPartitionIDConditionPair = createExperiment.createExperiment(protocol, host, allExperimentPartitionIDConditionPair)
+    omnibusExperimentPartitionIDConditionPair = createExperiment.createExperiment(protocol, host, omnibusExperimentPartitionIDConditionPair)
     experimentType = "Simple" if experimentType == 1 else "Factorial"
-    allExperimentPartitionIDConditionPair = createExperiment.createExperiment(protocol, host, allExperimentPartitionIDConditionPair, experimentType)
+    omnibusExperimentPartitionIDConditionPair = createExperiment.createExperiment(protocol, host, omnibusExperimentPartitionIDConditionPair, experimentType)
 
 ### Start enrolling students in the newly created experiment: ###
 #Return a new Student
@@ -189,7 +190,7 @@ class UpgradeUserTask(SequentialTaskSet):
     @tag("required", "portal")
     @task
     def init(self):
-        url = protocol + f"://{host}/api/init"
+        url = protocol + f"://{host}/api/v5/init"
         print("/init for userid: " + self.student["studentId"])
         data = {
             "id": self.student["studentId"],
@@ -211,7 +212,7 @@ class UpgradeUserTask(SequentialTaskSet):
         for schoolId in self.student["schools"].keys():
             for classId in self.student["schools"][schoolId]["classes"].keys():
                 instructorIds.append(self.student["schools"][schoolId]["classes"][classId]["instructorId"])
-        url = protocol + f"://{host}/api/groupmembership"
+        url = protocol + f"://{host}/api/v5/groupmembership"
         print("/groupmembership for userid: " + self.student["studentId"])
         data = {
             "id": self.student["studentId"],
@@ -221,14 +222,14 @@ class UpgradeUserTask(SequentialTaskSet):
                 "instructorId": instructorIds
             }
         }
-        with self.client.post(url, json = data, catch_response = True) as response:
+        with self.client.patch(url, json = data, catch_response = True) as response:
             if response.status_code != 200:
                 print(f"Group membership Failed with {response.status_code} for userid: " + self.student["studentId"])
     # Task 3: portal calls /assign
     @tag("portal")
     @task
     def getAllExperimentConditionsPortal(self):
-        url = protocol + f"://{host}/api/assign"
+        url = protocol + f"://{host}/api/v5/assign"
         print("/assign portal for userid: " + self.student["studentId"])
         data = {
             "userId": self.student["studentId"],
@@ -247,7 +248,7 @@ class UpgradeUserTask(SequentialTaskSet):
         workingSchoolId = random.choice(list(self.student["schools"].keys()))
         # workingClassId = random.choice(list(self.student["schools"][workingSchoolId]["classes"].keys()))
         # workingInstructorId = self.student["schools"][workingSchoolId]["classes"][workingClassId]["instructorId"]
-        url = protocol + f"://{host}/api/v1/workinggroup"
+        url = protocol + f"://{host}/api/v5/workinggroup"
         print("/workinggroup for userid: " + self.student["studentId"])
         data = {
             "id": self.student["studentId"],
@@ -267,7 +268,7 @@ class UpgradeUserTask(SequentialTaskSet):
         workingSchoolId = random.choice(list(self.student["schools"].keys()))
         # workingClassId = random.choice(list(self.student["schools"][workingSchoolId]["classes"].keys()))
         # classModules = self.student["schools"][workingSchoolId]["classes"][workingClassId]["classModules"]
-        url = protocol + f"://{host}/api/v1/useraliases"
+        url = protocol + f"://{host}/api/v5/useraliases"
         print("/useraliases for userid: " + self.student["studentId"])
         data = {
             "userId": self.student["studentId"],
@@ -282,7 +283,7 @@ class UpgradeUserTask(SequentialTaskSet):
     @tag("assign-prog")
     @task
     def getAllExperimentConditionsAssignProg(self):
-        url = protocol + f"://{host}/api/v1/assign"
+        url = protocol + f"://{host}/api/v5/assign"
         print("/assign assign-prog for userid: " + self.student["studentId"])
         data = {
             "userId": self.student["studentId"],
@@ -291,39 +292,61 @@ class UpgradeUserTask(SequentialTaskSet):
         with self.client.post(url, json = data, catch_response = True) as response:
             if response.status_code != 200:
                 print(f"getAllExperimentConditions in assign-prog Failed with {response.status_code}")
+            else:
+              # Store the response in an instance variable
+              self.assign_prog_response = response.json()
     # mark is called after finishing a workspace. In reality, mark is called 15-30 mins after assign
     # Task 7: Student count gets incremented here on marking complete
     @tag("assign-prog")
     @task
     def markExperimentPoint(self):
-        url = protocol + f"://{host}/api/v1/mark"
+        url = protocol + f"://{host}/api/v5/mark"
+
         print("/mark for userid: " + self.student["studentId"])
 
-        # if(len(allExperimentPartitionIDConditionPair) == 0):
-        #     print("No assigned conditions found")
-        #     return
-        # else:
-        #     print("allExperimentPartitionIDConditionPair: ", allExperimentPartitionIDConditionPair)
-        # pick a random pair of PartitionIdConditionId from allExperimentPartitionIDConditionPair
-        markPartitionIDConditionPair = random.choice(allExperimentPartitionIDConditionPair)
+        markPartitionIDConditionPair = random.choice(omnibusExperimentPartitionIDConditionPair)
+        assignment = None
 
         if "greenvilleWaukegaen" in self.student["schools"]:
+          markPartitionIDConditionPair = random.choice(omnibusExperimentPartitionIDConditionPair)
           condition = markPartitionIDConditionPair['condition'] if "greenvilleWaukegaen" in self.student["schools"] else None
           site = markPartitionIDConditionPair['site']
           target = markPartitionIDConditionPair['target']
         else:
-          condition_choices = ["control", "variant", None]
-          weights = [0.02, 0.02, 0.96]
+          weights = [0.04, 0.96]
+          choice = random.choices(['experiment_found', 'no_active_experiment'], weights, k=1)[0]
 
-          condition = random.choices(condition_choices, weights, k=1)[0]
-          site = "SelectSection"
-          target = random.choices(["analyzing_models_2step_integers", "analyzing_models_2step_rationals"])
+          if choice == 'experiment_found':
+              assignment = random.choice(self.assign_prog_response)
+          else:
+              assignment = None
 
+        if not assignment:
+          # Generate random strings for site and target
+          site = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
+          target = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
+          condition = None
+          experimentId = None
+        else:
+          site = assignment["site"]
+          target = assignment["target"]
+          payload = assignment["assignedCondition"][0]["payload"]
+          experimentId = assignment["assignedCondition"][0]["experimentId"]
+          if payload is None:
+            condition = assignment["assignedCondition"][0]["conditionCode"]
+          else:
+            condition = assignment["assignedCondition"][0]["payload"]["value"]
+        
         data = {
             "userId": self.student["studentId"],
-            "site": site,
-            "target": target,
-            "condition": condition,
+            "data": {
+              "site": site,
+              "target": target,
+              "assignedCondition": {
+                  "conditionCode": condition,
+                  "experimentId": experimentId
+              }
+            }
         }
 
         print("user schoolId", self.student["schools"])
@@ -403,7 +426,7 @@ class UpgradeUserTask(SequentialTaskSet):
     @tag("logger")
     @task
     def logEvent(self):
-        url = protocol + f"://{host}/api/log"
+        url = protocol + f"://{host}/api/v5/log"
         data = {
             "userId": self.student["studentId"],
             "value": [
@@ -414,6 +437,7 @@ class UpgradeUserTask(SequentialTaskSet):
             if response.status_code != 200:
                 print(f"LogEvent Failed with {response.status_code}")
 class UpgradeUser(HttpUser):
+  
     wait_time = between(0.1, 10)
     host = "https://upgradeapi.qa-cli.com"
     tasks = [UpgradeUserTask]
