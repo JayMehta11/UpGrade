@@ -7,7 +7,7 @@ export const environment = {
   baseHrefPrefix: '',
   googleClientId: '',
   domainName: '',
-  pollingEnabled: true,
+  pollingEnabled: false,
   pollingInterval: 10 * 1000,
   pollingLimit: 600,
   api: {
