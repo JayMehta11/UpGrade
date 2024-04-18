@@ -9,7 +9,7 @@ import deleteExperiment
 import json
 
 schools = {
-  "greenvilleWaukegaen": "greenvilleWaukegaen",
+  "greenvilleWaukegaen": "1740734k62m",
   "notGreenvilleWaukegaen": "notGreenvilleWaukegaen"
 }
 students = {}
@@ -56,28 +56,28 @@ protocol = "https"
 host = "upgradeapi.qa-cli.com"
 
 # clear existing experiments:
-option = int(input("Enter 1 for delete a single random experiment and 2 to delete all experiments, else Enter 0 for not deleting any experiment: "))
+# option = int(input("Enter 1 for delete a single random experiment and 2 to delete all experiments, else Enter 0 for not deleting any experiment: "))
 
-if option == 1:
-    expIds = deleteExperiment.getExperimentIds(protocol, host)
-    deleteExperiment.deleteExperiment(protocol, host, expIds)
-elif option == 2:
-    expIds = deleteExperiment.getExperimentIds(protocol, host)
-    for i in range(len(expIds)):
-        expIds = deleteExperiment.getExperimentIds(protocol, host)
-        deleteExperiment.deleteExperiment(protocol, host, expIds)
-else:
-    pass
+# if option == 1:
+#     expIds = deleteExperiment.getExperimentIds(protocol, host)
+#     deleteExperiment.deleteExperiment(protocol, host, expIds)
+# elif option == 2:
+#     expIds = deleteExperiment.getExperimentIds(protocol, host)
+#     for i in range(len(expIds)):
+#         expIds = deleteExperiment.getExperimentIds(protocol, host)
+#         deleteExperiment.deleteExperiment(protocol, host, expIds)
+# else:
+#     pass
 
 # create new experiments:
-experimentCount = int(input("Enter the number of experiments to be created: "))
+# experimentCount = int(input("Enter the number of experiments to be created: "))
 
-for i in range(experimentCount):
-    experimentType = int(input("Enter the experiment type: Enter 1 for Simple and 2 for Factorial:"))
-    # returning the updated partionconditionpair list:
-    omnibusExperimentPartitionIDConditionPair = createExperiment.createExperiment(protocol, host, omnibusExperimentPartitionIDConditionPair)
-    experimentType = "Simple" if experimentType == 1 else "Factorial"
-    omnibusExperimentPartitionIDConditionPair = createExperiment.createExperiment(protocol, host, omnibusExperimentPartitionIDConditionPair, experimentType)
+# for i in range(experimentCount):
+#     experimentType = int(input("Enter the experiment type: Enter 1 for Simple and 2 for Factorial:"))
+#     # returning the updated partionconditionpair list:
+#     omnibusExperimentPartitionIDConditionPair = createExperiment.createExperiment(protocol, host, omnibusExperimentPartitionIDConditionPair)
+#     experimentType = "Simple" if experimentType == 1 else "Factorial"
+#     omnibusExperimentPartitionIDConditionPair = createExperiment.createExperiment(protocol, host, omnibusExperimentPartitionIDConditionPair, experimentType)
 
 ### Start enrolling students in the newly created experiment: ###
 #Return a new Student
@@ -139,7 +139,7 @@ def getSchools(schoolCount):
         # retSchools.append(schoolId)
     isGreenvilleWauekgaen = random.randint(1,100) <= 3
     if isGreenvilleWauekgaen:
-        retSchools.append("greenvilleWaukegaen")
+        retSchools.append("1740734k62m")
     else:
         retSchools.append("notGreenvilleWaukegaen")
     return retSchools
@@ -183,7 +183,7 @@ class UpgradeUserTask(SequentialTaskSet):
     # each User represents one Student
     def on_start(self):
         self.student = initStudent()
-        print("Student: ", self.student)
+        # print("Student: ", self.student)
     #Portal Tasks
     ## Portal calls init -> setGroupMembership in reality
     # Task 1: portal calls /init
@@ -191,7 +191,7 @@ class UpgradeUserTask(SequentialTaskSet):
     @task
     def init(self):
         url = protocol + f"://{host}/api/v5/init"
-        print("/init for userid: " + self.student["studentId"])
+        # print("/init for userid: " + self.student["studentId"])
         data = {
             "id": self.student["studentId"],
             "group": {},
@@ -213,7 +213,7 @@ class UpgradeUserTask(SequentialTaskSet):
             for classId in self.student["schools"][schoolId]["classes"].keys():
                 instructorIds.append(self.student["schools"][schoolId]["classes"][classId]["instructorId"])
         url = protocol + f"://{host}/api/v5/groupmembership"
-        print("/groupmembership for userid: " + self.student["studentId"])
+        # print("/groupmembership for userid: " + self.student["studentId"])
         data = {
             "id": self.student["studentId"],
             "group": {
@@ -230,13 +230,13 @@ class UpgradeUserTask(SequentialTaskSet):
     @task
     def getAllExperimentConditionsPortal(self):
         url = protocol + f"://{host}/api/v5/assign"
-        print("/assign portal for userid: " + self.student["studentId"])
+        # print("/assign portal for userid: " + self.student["studentId"])
         data = {
             "userId": self.student["studentId"],
             "context": "portal"
         }
-        print("user", self.student["studentId"])
-        print("assignments: ", data)
+        # print("user", self.student["studentId"])
+        # print("assignments: ", data)
         with self.client.post(url, json = data, catch_response = True) as response:
             if response.status_code != 200:
                 print(f"/assign Failed with {response.status_code} for userid: " + self.student["studentId"])
@@ -249,7 +249,7 @@ class UpgradeUserTask(SequentialTaskSet):
         # workingClassId = random.choice(list(self.student["schools"][workingSchoolId]["classes"].keys()))
         # workingInstructorId = self.student["schools"][workingSchoolId]["classes"][workingClassId]["instructorId"]
         url = protocol + f"://{host}/api/v5/workinggroup"
-        print("/workinggroup for userid: " + self.student["studentId"])
+        # print("/workinggroup for userid: " + self.student["studentId"])
         data = {
             "id": self.student["studentId"],
             "workingGroup": {
@@ -269,7 +269,7 @@ class UpgradeUserTask(SequentialTaskSet):
         # workingClassId = random.choice(list(self.student["schools"][workingSchoolId]["classes"].keys()))
         # classModules = self.student["schools"][workingSchoolId]["classes"][workingClassId]["classModules"]
         url = protocol + f"://{host}/api/v5/useraliases"
-        print("/useraliases for userid: " + self.student["studentId"])
+        # print("/useraliases for userid: " + self.student["studentId"])
         data = {
             "userId": self.student["studentId"],
             "aliases": [str(uuid.uuid4()), str(uuid.uuid4()), str(uuid.uuid4())]
@@ -284,7 +284,7 @@ class UpgradeUserTask(SequentialTaskSet):
     @task
     def getAllExperimentConditionsAssignProg(self):
         url = protocol + f"://{host}/api/v5/assign"
-        print("/assign assign-prog for userid: " + self.student["studentId"])
+        # print("/assign assign-prog for userid: " + self.student["studentId"])
         data = {
             "userId": self.student["studentId"],
             "context": "assign-prog"
@@ -302,29 +302,36 @@ class UpgradeUserTask(SequentialTaskSet):
     def markExperimentPoint(self):
         url = protocol + f"://{host}/api/v5/mark"
 
-        print("/mark for userid: " + self.student["studentId"])
+        # print("/mark for userid: " + self.student["studentId"])
 
-        markPartitionIDConditionPair = random.choice(omnibusExperimentPartitionIDConditionPair)
+        # markPartitionIDConditionPair = random.choice(omnibusExperimentPartitionIDConditionPair)
         assignment = None
 
-        if "greenvilleWaukegaen" in self.student["schools"]:
-          markPartitionIDConditionPair = random.choice(omnibusExperimentPartitionIDConditionPair)
-          condition = markPartitionIDConditionPair['condition'] if "greenvilleWaukegaen" in self.student["schools"] else None
-          site = markPartitionIDConditionPair['site']
-          target = markPartitionIDConditionPair['target']
-        else:
-          weights = [0.04, 0.96]
-          choice = random.choices(['experiment_found', 'no_active_experiment'], weights, k=1)[0]
+        # if "greenvilleWaukegaen" in self.student["schools"]:
+        #   markPartitionIDConditionPair = random.choice(omnibusExperimentPartitionIDConditionPair)
+        #   condition = markPartitionIDConditionPair['condition'] if "greenvilleWaukegaen" in self.student["schools"] else None
+        #   site = markPartitionIDConditionPair['site']
+        #   target = markPartitionIDConditionPair['target']
+        # else:
+        weights = [0.10, 0.90]
+        choice = random.choices(['experiment_found', 'no_active_experiment'], weights, k=1)[0]
 
-          if choice == 'experiment_found':
-              assignment = random.choice(self.assign_prog_response)
-          else:
-              assignment = None
+        if choice == 'experiment_found':
+            assignment = random.choice(self.assign_prog_response)
+        else:
+            assignment = None
+        print(" ")
+        print("*** USER SCHOOLS")
+        print(self.student["schools"])
+        print("*** ASSIGNMENTS")
+        print(self.assign_prog_response)
+        print("*** WILL MARK")
+        print(assignment)
 
         if not assignment:
           # Generate random strings for site and target
-          site = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
-          target = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
+          site = 'SelectSection'
+          target = 'fake_target'
           condition = None
           experimentId = None
         else:
@@ -349,7 +356,7 @@ class UpgradeUserTask(SequentialTaskSet):
             }
         }
 
-        print("user schoolId", self.student["schools"])
+        # print("user schoolId", self.student["schools"])
         print("mark data: ", data)
 
         with self.client.post(url, json = data, catch_response = True) as response:
@@ -360,13 +367,13 @@ class UpgradeUserTask(SequentialTaskSet):
     # @task
     # def failedExperimentPoint(self):
     #     url = protocol + f"://{host}/api/failed"
-    #     print("/failed for userid: " + self.student["studentId"])
+    #     # print("/failed for userid: " + self.student["studentId"])
 
     #     if(len(allExperimentPartitionIDConditionPair) == 0):
-    #         print("No assigned conditions found")
+    #         # print("No assigned conditions found")
     #         return
     #     else:
-    #         print("allExperimentPartitionIDConditionPair: ", allExperimentPartitionIDConditionPair)
+    #         # print("allExperimentPartitionIDConditionPair: ", allExperimentPartitionIDConditionPair)
     #     # pick a random pair of PartitionIdConditionId from allExperimentPartitionIDConditionPair
     #     markPartitionIDConditionPair = random.choice(allExperimentPartitionIDConditionPair)
 
@@ -389,7 +396,7 @@ class UpgradeUserTask(SequentialTaskSet):
     #     # }
     #     with self.client.post(url, json = data, catch_response = True) as response:
     #         if response.status_code != 200:
-    #             print(f"/failed Failed with {response.status_code} for userid: " + self.student["studentId"])
+    #             # print(f"/failed Failed with {response.status_code} for userid: " + self.student["studentId"])
     # Generate mock log data 
     def genMockLog(self):
         attributes = {
