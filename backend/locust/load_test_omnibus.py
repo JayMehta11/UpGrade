@@ -52,8 +52,8 @@ omnibusExperimentPartitionIDConditionPair = [
 ]
 
 # Setting host URL's:
-protocol = "https"
-host = "upgradeapi.qa-cli.com"
+protocol = "http"
+host = "localhost:3030"
 
 # clear existing experiments:
 # option = int(input("Enter 1 for delete a single random experiment and 2 to delete all experiments, else Enter 0 for not deleting any experiment: "))
@@ -137,7 +137,7 @@ def getSchools(schoolCount):
         #     while schoolId in retSchools:
         #         schoolId = random.choice(list(schools.keys()))
         # retSchools.append(schoolId)
-    isGreenvilleWauekgaen = random.randint(1,100) <= 3
+    isGreenvilleWauekgaen = random.randint(1,100) <= 50
     if isGreenvilleWauekgaen:
         retSchools.append("1740734k62m")
     else:
@@ -313,7 +313,7 @@ class UpgradeUserTask(SequentialTaskSet):
         #   site = markPartitionIDConditionPair['site']
         #   target = markPartitionIDConditionPair['target']
         # else:
-        weights = [0.10, 0.90]
+        weights = [0.9, 0.1]
         choice = random.choices(['experiment_found', 'no_active_experiment'], weights, k=1)[0]
 
         if choice == 'experiment_found':
@@ -357,7 +357,7 @@ class UpgradeUserTask(SequentialTaskSet):
         }
 
         # print("user schoolId", self.student["schools"])
-        print("mark data: ", data)
+        # print("mark data: ", data)
 
         with self.client.post(url, json = data, catch_response = True) as response:
             if response.status_code != 200:
@@ -446,5 +446,5 @@ class UpgradeUserTask(SequentialTaskSet):
 class UpgradeUser(HttpUser):
   
     wait_time = between(0.1, 10)
-    host = "https://upgradeapi.qa-cli.com"
+    host = "http://localhost:3030"
     tasks = [UpgradeUserTask]
