@@ -438,6 +438,8 @@ export class ExperimentClientController {
       experiment.uniquifier ? experiment.uniquifier : null,
       experiment.clientError ? experiment.clientError : null
     );
+
+    request.logger.info({ message: '[MARKRESPONSE] Sending reponse for user', details: experiment });
     return rest;
   }
 
