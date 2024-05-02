@@ -416,6 +416,7 @@ export class ExperimentClientController {
     experiment: MarkExperimentValidatorv5
   ): Promise<IMonitoredDecisionPoint> {
     request.logger.info({ message: 'Starting the markExperimentPoint call for user' });
+    request.logger.info({ message: '[MARKREQUEST] Received the request for user', details: experiment });
     // getOriginalUserDoc call for alias
     const experimentUserDoc = await this.getUserDoc(experiment.userId, request.logger);
     if (experimentUserDoc) {
@@ -502,6 +503,8 @@ export class ExperimentClientController {
     experiment: ExperimentAssignmentValidator
   ): Promise<IExperimentAssignmentv5[]> {
     request.logger.info({ message: 'Starting the getAllExperimentConditions call for user' });
+    // log out the request
+    request.logger.info({ message: '[ASSIGNREQUEST] Received the request for user', details: experiment });
     const assignedData = await this.experimentAssignmentService.getAllExperimentConditions(
       experiment.userId,
       experiment.context,
