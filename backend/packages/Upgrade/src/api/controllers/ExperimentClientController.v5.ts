@@ -515,8 +515,9 @@ export class ExperimentClientController {
         userDoc: null,
       }
     );
+    request.logger.info({ message: '[ASSIGNEDDATA] Sending reponse for user', details: assignedData });
 
-    return assignedData.map(({ assignedFactor, assignedCondition, ...rest }) => {
+    const response = assignedData.map(({ assignedFactor, assignedCondition, ...rest }) => {
       const finalFactorData = assignedFactor?.map((factor) => {
         const updatedAssignedFactor: Record<string, { level: string; payload: IPayload }> = {};
         Object.keys(factor).forEach((key) => {
@@ -548,6 +549,9 @@ export class ExperimentClientController {
         assignedFactor: assignedFactor ? finalFactorData : undefined,
       };
     });
+
+    request.logger.info({ message: '[ASSIGNRESPONSE] Sending reponse for user', details: response });
+    return response;
   }
 
   /**
