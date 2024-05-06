@@ -420,6 +420,7 @@ export class ExperimentClientController {
     experiment: MarkExperimentValidatorv5
   ): Promise<IMonitoredDecisionPoint> {
     request.logger.info({ message: 'Starting the markExperimentPoint call for user' });
+    request.logger.info({ message: '[DEBUG: MARKREQUEST] Received the request for user', details: experiment });
     // getOriginalUserDoc call for alias
     const experimentUserDoc = await this.experimentUserService.getUserDoc(experiment.userId, request.logger);
     if (experimentUserDoc) {
@@ -441,6 +442,8 @@ export class ExperimentClientController {
       experiment.uniquifier ? experiment.uniquifier : null,
       experiment.clientError ? experiment.clientError : null
     );
+
+    request.logger.info({ message: '[DEBUG: MARKRESPONSE] Sending reponse for user', details: experiment });
     return rest;
   }
 
@@ -506,6 +509,7 @@ export class ExperimentClientController {
     experiment: ExperimentAssignmentValidator
   ): Promise<IExperimentAssignmentv5[]> {
     request.logger.info({ message: 'Starting the getAllExperimentConditions call for user' });
+    request.logger.info({ message: '[DEBUG: ASSIGNREQUEST] Received the request for user', details: experiment });
     const assignedData = await this.experimentAssignmentService.getAllExperimentConditions(
       experiment.userId,
       experiment.context,
@@ -514,8 +518,9 @@ export class ExperimentClientController {
         userDoc: null,
       }
     );
+    request.logger.info({ message: '[DEBUG: ASSIGNEDDATA] Sending reponse for user', details: assignedData });
 
-    return assignedData.map(({ assignedFactor, assignedCondition, ...rest }) => {
+    const response = assignedData.map(({ assignedFactor, assignedCondition, ...rest }) => {
       const finalFactorData = assignedFactor?.map((factor) => {
         const updatedAssignedFactor: Record<string, { level: string; payload: IPayload }> = {};
         Object.keys(factor).forEach((key) => {
@@ -547,6 +552,8 @@ export class ExperimentClientController {
         assignedFactor: assignedFactor ? finalFactorData : undefined,
       };
     });
+
+    return response;
   }
 
   /**
