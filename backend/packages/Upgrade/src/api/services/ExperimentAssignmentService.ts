@@ -65,6 +65,7 @@ import { parse, toSeconds } from 'iso8601-duration';
 import { FactorDTO } from '../DTO/FactorDTO';
 import { ConditionPayloadDTO } from '../DTO/ConditionPayloadDTO';
 import { withInSubjectType } from '../Algorithms';
+import exp from 'constants';
 @Service()
 export class ExperimentAssignmentService {
   constructor(
@@ -204,7 +205,7 @@ export class ExperimentAssignmentService {
       experiments = await this.experimentRepository.getValidExperimentsWithPreview(context);
     } else {
       experiments = await this.experimentService.getCachedValidExperiments(context);
-      logger.info({ message: `[DEBUG: MARK getCachedValidExperiments]: ${experiments}` });
+      logger.info({ message: `[DEBUG: MARK getCachedValidExperiments]:`, details: experiments });
     }
 
     // Experiment has assignment type as GROUP_ASSIGNMENT
@@ -471,7 +472,7 @@ export class ExperimentAssignmentService {
     if (previewUser) {
       experiments = await this.experimentRepository.getValidExperimentsWithPreview(context);
     } else {
-      logger.info({ message: `[DEBUG: ASSIGN getCachedValidExperiments]: ${experiments}` });
+      logger.info({ message: `[DEBUG: ASSIGN getCachedValidExperiments]:`, details: experiments });
       experiments = await this.experimentService.getCachedValidExperiments(context);
     }
     experiments = experiments.map((exp) => this.experimentService.formatingConditionPayload(exp));
