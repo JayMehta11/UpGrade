@@ -204,6 +204,7 @@ export class ExperimentAssignmentService {
       experiments = await this.experimentRepository.getValidExperimentsWithPreview(context);
     } else {
       experiments = await this.experimentService.getCachedValidExperiments(context);
+      logger.info({ message: `[DEBUG: MARK getCachedValidExperiments]: ${experiments}` });
     }
 
     // Experiment has assignment type as GROUP_ASSIGNMENT
@@ -470,6 +471,7 @@ export class ExperimentAssignmentService {
     if (previewUser) {
       experiments = await this.experimentRepository.getValidExperimentsWithPreview(context);
     } else {
+      logger.info({ message: `[DEBUG: ASSIGN getCachedValidExperiments]: ${experiments}` });
       experiments = await this.experimentService.getCachedValidExperiments(context);
     }
     experiments = experiments.map((exp) => this.experimentService.formatingConditionPayload(exp));
@@ -564,10 +566,11 @@ export class ExperimentAssignmentService {
 
       // Create experiment pool
       const experimentPools = this.createExperimentPool(filteredExperiments);
-      // console.log(
-      //   'experimentPools',
-      //   experimentPools.map((exp) => exp.map(({ id }) => id))
-      // );
+
+      logger.logger.info({
+        message: '[DEBUG: ASSIGNSERVICE-EXP-POOLS] experimentPools',
+        details: experimentPools.map((exp) => exp.map(({ id }) => id)),
+      });
 
       // filter pools which are not assigned
       const unassignedPools = experimentPools.filter((pool) => {
@@ -583,6 +586,11 @@ export class ExperimentAssignmentService {
           });
           return individualEnrollment || groupEnrollment ? true : false;
         });
+      });
+
+      logger.logger.info({
+        message: '[DEBUG: ASSIGNSERVICE-UNASSIGNED-POOLS] unassignedPools',
+        details: experimentPools.map((exp) => exp.map(({ id }) => id)),
       });
 
       // Assign experiments inside the pools
