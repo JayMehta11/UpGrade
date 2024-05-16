@@ -1,0 +1,42 @@
+{
+  "flags": [
+    {
+      "id": "1",
+      "name": "bears",
+      "key": "FF9158",
+      "description": "dsd99",
+      "status": "enabled",
+      "context":["sub"],
+      "tags": ["tag99", "tag96"],
+      "featureFlagSegmentInclusion": {
+          "segment": {
+              "type": "private"
+          }
+      },
+      "featureFlagSegmentExclusion": {
+          "segment": {
+              "type": "private"
+          }
+      }
+  },
+  {
+    "id": "2",
+    "name": "lions",
+    "key": "FF9158",
+    "description": "dsd99",
+    "status": "enabled",
+    "context":["sub"],
+    "tags": ["tag99", "tag96"],
+    "featureFlagSegmentInclusion": {
+        "segment": {
+            "type": "private"
+        }
+    },
+    "featureFlagSegmentExclusion": {
+        "segment": {
+            "type": "private"
+        }
+    }
+}
+  ]
+}

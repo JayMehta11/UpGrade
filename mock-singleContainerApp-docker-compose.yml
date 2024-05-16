@@ -2,7 +2,7 @@ services:
   upgrade-app:
     build:
       context: .
-      dockerfile: ./dev.singleContainerApp.Dockerfile
+      dockerfile: ./dev.mock.singleContainerApp.Dockerfile
     image: upgrade-app:latest
     user: "node"
     env_file:
@@ -19,6 +19,16 @@ services:
       - "3030:3030"
     depends_on:
       - "postgres"
+
+  mock-api:
+    build:
+      context: ./frontend/projects/mock-api/
+      dockerfile: Dockerfile
+    image: upgrade-mock-api:latest
+    networks:
+      - localdev
+    ports:
+      - "3000:3000"
 
   postgres:
     image: postgres:alpine

@@ -1,0 +1,14 @@
+{
+  "name": "mock-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "middleware.js",
+  "scripts": {
+    "serve": "json-server --port 3031 --watch db.json --routes routes.json --host 0.0.0.0"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "json-server": "0.16.3"
+  }
+}

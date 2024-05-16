@@ -110,36 +110,36 @@ export class FeatureFlagsController {
    *          '200':
    *            description: Get Paginated Experiments
    */
-  @Post('/paginated')
-  public async paginatedFind(
-    @Body({ validate: true })
-    paginatedParams: FeatureFlagPaginatedParamsValidator,
-    @Req() request: AppRequest
-  ): Promise<FeatureFlagsPaginationInfo> {
-    if (!paginatedParams) {
-      return Promise.reject(
-        new Error(
-          JSON.stringify({ type: SERVER_ERROR.MISSING_PARAMS, message: ' : paginatedParams should not be null.' })
-        )
-      );
-    }
+  // @Post('/paginated')
+  // public async paginatedFind(
+  //   @Body({ validate: true })
+  //   paginatedParams: FeatureFlagPaginatedParamsValidator,
+  //   @Req() request: AppRequest
+  // ): Promise<FeatureFlagsPaginationInfo> {
+  //   if (!paginatedParams) {
+  //     return Promise.reject(
+  //       new Error(
+  //         JSON.stringify({ type: SERVER_ERROR.MISSING_PARAMS, message: ' : paginatedParams should not be null.' })
+  //       )
+  //     );
+  //   }
 
-    const [featureFlags, count] = await Promise.all([
-      this.featureFlagService.findPaginated(
-        paginatedParams.skip,
-        paginatedParams.take,
-        request.logger,
-        paginatedParams.searchParams,
-        paginatedParams.sortParams
-      ),
-      this.featureFlagService.getTotalCount(),
-    ]);
-    return {
-      total: count,
-      nodes: featureFlags,
-      ...paginatedParams,
-    };
-  }
+  //   const [featureFlags, count] = await Promise.all([
+  //     this.featureFlagService.findPaginated(
+  //       paginatedParams.skip,
+  //       paginatedParams.take,
+  //       request.logger,
+  //       paginatedParams.searchParams,
+  //       paginatedParams.sortParams
+  //     ),
+  //     this.featureFlagService.getTotalCount(),
+  //   ]);
+  //   return {
+  //     total: count,
+  //     nodes: featureFlags,
+  //     ...paginatedParams,
+  //   };
+  // }
 
   /**
    * @swagger

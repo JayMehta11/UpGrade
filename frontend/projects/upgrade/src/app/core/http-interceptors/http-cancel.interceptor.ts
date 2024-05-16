@@ -25,11 +25,11 @@ export class HttpCancelInterceptor implements HttpInterceptor {
   private pendingHTTPRequests$ = new Subject<void>();
 
   constructor(private router: Router) {
-    this.router.events.subscribe((event) => {
-      if (event instanceof ActivationEnd) {
-        this.cancelPendingRequests();
-      }
-    });
+    // this.router.events.subscribe((event) => {
+    //   if (event instanceof ActivationEnd) {
+    //     this.cancelPendingRequests();
+    //   }
+    // });
   }
 
   intercept<T>(req: HttpRequest<T>, next: HttpHandler): Observable<HttpEvent<T>> {

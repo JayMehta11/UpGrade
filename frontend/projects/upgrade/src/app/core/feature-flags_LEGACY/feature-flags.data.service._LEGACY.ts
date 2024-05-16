@@ -8,7 +8,8 @@ export class FeatureFlagsDataService_LEGACY {
   constructor(private http: HttpClient, @Inject(ENV) private environment: Environment) {}
 
   fetchFeatureFlags(params: FeatureFlagsPaginationParams_LEGACY) {
-    const url = this.environment.api.getPaginatedFlags;
+    const url = '/flags';
+    console.log('hi url', url);
     return this.http.post(url, params);
   }
 

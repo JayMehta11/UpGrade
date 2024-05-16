@@ -255,6 +255,9 @@
           "configurations": {
             "production": {
               "buildTarget": "upgrade:build:production"
+            },
+            "mock": {
+              "proxyConfig": "projects/upgrade/src/proxy.config.js"
             }
           }
         },

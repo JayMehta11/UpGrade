@@ -1,0 +1,31 @@
+FF Root Page [Page]
+  header: FF Root Header [Root Header]
+    section-card: FF Root Section Card [Section Card]
+      header-left: [Search Widget] --> outputs search filter values
+      header-right: FF Root Action Buttons [Action Buttons]
+      content: FF Table [Table?] --> inputs search filter values
+
+FF Detail Page [Page]
+  header: FF Details Header [Details Header]
+    section-card: FF Details Overview Section Card [Section Card]
+      header-left: FF Details Overview Header [Section Card Header Title]
+      header-right: FF Details Action Buttons [Section Card Header Action Buttons] --> outputs collapse event (for global page collapse)
+      content: FF Overview [Overview Details Section Card]
+      footer: FF Details Page Tabs [Section Card Tabs Footer?] ---> outputs selected tab index
+
+    - ngSwitch on selected index -
+    (Tabbed Content: Participants)
+    section-card: FF Include Section Card [Section Card]
+      header-left: FF Details Table Search Widget [Search Widget]
+      header-right: FF Details Action Buttons [Action Buttons]
+      content: FF Table [Table?] 
+    section-card: FF Exclude Section Card [Section Card]
+      header-left: FF Details Table Search Widget [Section Card Header Title]
+      header-right: FF Details Action Buttons [Action Buttons]
+      content: FF Table [Table?]
+
+    (Tabbed Content: Data) --> this should be lazy-loaded to prevent fetching analysis data
+    section-card: FF Exposures Section Card [Section Card]
+      header-left: FF Details Table Search Widget [Section Card Header Title]
+      header-right: FF Details Action Buttons [Action Buttons]
+      content: FF Details Exposures Content [?]
